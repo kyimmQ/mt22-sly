@@ -580,7 +580,7 @@ class MT22Parser(Parser):
     
     @_('MINUS exp6')
     def exp6(self, ctx):
-        expr = ctx.epx6
+        expr = ctx.exp6
         return UnExpr(ctx.MINUS, expr)
     
     @_('exp7')
@@ -644,18 +644,15 @@ class MT22Parser(Parser):
 
 if __name__ == '__main__':
     data = """
-            x: integer = 65;
-            fact: function integer(n: integer){
-                if (n == 0) return 1;
-                else return n * fact(n-1);
-            }
-            inc: function void (out n: integer, inherit delta: integer) inherit fact{
-                n = n + delta;
-            }
-            main: function void () {
-                delta: integer = fact(fact(3));
-                inc(x,delta);
-                printInt(x);
+            main : function void() {
+                x,y : integer = 3, 5+7;
+                do {
+                    if (x > 1) writeInt(x);
+                    x = x - 1;
+                    continue;
+                    if (x > 5) writeInt(x);
+                }
+                while (x > 0);
             }
         """
     lexer = MT22Lexer()
