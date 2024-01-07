@@ -56,7 +56,7 @@ class MT22Lexer(Lexer):
         t.value = t.value.replace('_','')
         return t
     
-    @_(r'([1-9][0-9]*(_[0-9]+)*)|[0] ')
+    @_(r'([1-9][0-9]*(_[0-9]+)*)|[0]')
     def INTLIT(self, t):
         t.value = t.value.replace('_','')
         return t
@@ -130,13 +130,15 @@ class MT22Parser(Parser):
     
     @_('ID COLON typeof SEMICOLON')
     def vardecl(self, ctx):
+        
         ids = [ctx.ID] 
         typeof = ctx.typeof
         return list(map(lambda id:VarDecl(id , typeof, None), ids))
     
-    @_('ID subvardecl')
+    @_('ID subvardecl2')
     def vardecl(self, ctx):
-        ids, exps, typeof = ctx.subvardecl
+        
+        ids, exps, typeof = ctx.subvardecl2
         ids = [ctx.ID] + ids
         return list(map(lambda id:VarDecl(id , typeof, None), ids))
     
@@ -144,6 +146,7 @@ class MT22Parser(Parser):
     
     @_('ID subvardecl exp0 SEMICOLON')
     def vardecl(self, ctx):
+        
         ids, exps, typeof = ctx.subvardecl
         ids = [ctx.ID] + ids
         exps = exps + [ctx.exp0]
@@ -155,7 +158,7 @@ class MT22Parser(Parser):
     # fix chỗ này
     @_('COMMA ID subvardecl exp0 COMMA')
     def subvardecl(self, ctx):
-        print('here')
+        
         ids, exps, typeof = ctx.subvardecl
         return [ctx.ID] + ids, exps + [ctx.exp0], typeof
     
@@ -163,14 +166,15 @@ class MT22Parser(Parser):
     def subvardecl(self, ctx):
         return [], [], ctx.typeof
     
-    @_('COMMA ID subvardecl')
-    def subvardecl(self, ctx):
-        print('here')
-        ids, exps, typeof = ctx.subvardecl
+    @_('COMMA ID subvardecl3')
+    def subvardecl2(self, ctx):
+        
+        ids, exps, typeof = ctx.subvardecl3
         return [ctx.ID] + ids, exps , typeof
     
     @_('COLON typeof SEMICOLON')
-    def subvardecl(self, ctx):
+    def subvardecl3(self, ctx):
+        
         return [], [], ctx.typeof
     
     # idlist: ID COMMA idlist | ID;
@@ -639,13 +643,14 @@ class MT22Parser(Parser):
     
 
 if __name__ == '__main__':
-    data = """main: function void () {
-                for (i = 1, i < 10, i + 1) {
-                    if (4*2 > i){
-                        writeInt(i);
-                        continue;
-                    }
-                }
+    data = """
+            r, s: integer;
+            main: function void () {
+                a, b: array [5] of integer;
+                r = 2.0;
+                s = r * r * myPI;
+                a[0] = s;
+                printInt(a[0]);
             }
         """
     lexer = MT22Lexer()

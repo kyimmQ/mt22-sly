@@ -7,12 +7,12 @@ Rule 3     decllist -> decl
 Rule 4     decl -> funcdecl
 Rule 5     decl -> vardecl
 Rule 6     vardecl -> ID subvardecl exp0 SEMICOLON
-Rule 7     vardecl -> ID subvardecl
+Rule 7     vardecl -> ID subvardecl2
 Rule 8     vardecl -> ID COLON typeof SEMICOLON
-Rule 9     subvardecl -> COLON typeof SEMICOLON
-Rule 10    subvardecl -> COMMA ID subvardecl
-Rule 11    subvardecl -> COLON typeof ASSIGNMENT
-Rule 12    subvardecl -> COMMA ID subvardecl exp0 COMMA
+Rule 9     subvardecl -> COLON typeof ASSIGNMENT
+Rule 10    subvardecl -> COMMA ID subvardecl exp0 COMMA
+Rule 11    subvardecl2 -> COMMA ID subvardecl3
+Rule 12    subvardecl3 -> COLON typeof SEMICOLON
 Rule 13    idlist -> ID
 Rule 14    idlist -> ID COMMA idlist
 Rule 15    typeof -> arrtype
@@ -124,13 +124,13 @@ Terminals, with rules where they appear:
 
 AND                  : 93
 ARRAY                : 22
-ASSIGNMENT           : 11 58 59 64
+ASSIGNMENT           : 9 58 59 64
 AUTO                 : 17 28
 BOOLEAN              : 21
 BOOLEANLIT           : 114
 BREAK                : 71
-COLON                : 8 9 11 29 30 36 37 38 39
-COMMA                : 10 12 12 14 24 35 63 63 82
+COLON                : 8 9 12 29 30 36 37 38 39
+COMMA                : 10 10 11 14 24 35 63 63 82
 CONTINUE             : 72
 DIV                  : 97
 DO                   : 70
@@ -143,7 +143,7 @@ FOR                  : 63
 FUNCTION             : 29 30
 GEQ                  : 89
 GREATERTHAN          : 88
-ID                   : 6 7 8 10 12 13 14 29 29 30 36 37 38 39 58 59 65 75 77 107 112
+ID                   : 6 7 8 10 11 13 14 29 29 30 36 37 38 39 58 59 65 75 77 107 112
 IF                   : 60 61 62
 INHERIT              : 29 37 39
 INTEGER              : 20
@@ -166,7 +166,7 @@ RBRACE               : 76 78
 RBRACKET             : 22 59 107
 RETURN               : 73 74
 RPAREN               : 31 60 61 62 63 69 70 75 77 117
-SEMICOLON            : 6 8 9 58 59 70 71 72 73 74 75
+SEMICOLON            : 6 8 12 58 59 70 71 72 73 74 75
 STRING               : 18
 STRINGLIT            : 113
 VOID                 : 27
@@ -189,7 +189,7 @@ decllist             : 1 2
 dime                 : 22 24
 dowhilestmt          : 53
 empty                : 32 40 79
-exp0                 : 6 12 58 59 60 61 62 64 66 67 69 70 74 81 82 117
+exp0                 : 6 10 58 59 60 61 62 64 66 67 69 70 74 81 82 117
 exp1                 : 90 90 91
 exp10                : 110
 exp2                 : 83 84 84 85 85 86 86 87 87 88 88 89 89 93 94
@@ -220,8 +220,10 @@ scalavar             : 64
 stmt                 : 42 45 61 63 68
 stmtlist             : 44 45 76
 stmtprime            : 41
-subvardecl           : 6 7 10 12
-typeof               : 8 9 11 36 37 38 39
+subvardecl           : 6 10
+subvardecl2          : 7
+subvardecl3          : 11
+typeof               : 8 9 12 36 37 38 39
 unmatchif            : 47 62
 updatefor            : 63
 vardecl              : 5 43 44
@@ -240,7 +242,7 @@ state 0
     (29) funcdecl -> . ID COLON FUNCTION returntype paramdecl INHERIT ID blockstmt
     (30) funcdecl -> . ID COLON FUNCTION returntype paramdecl blockstmt
     (6) vardecl -> . ID subvardecl exp0 SEMICOLON
-    (7) vardecl -> . ID subvardecl
+    (7) vardecl -> . ID subvardecl2
     (8) vardecl -> . ID COLON typeof SEMICOLON
     ID              shift and go to state 6
 
@@ -272,7 +274,7 @@ state 3
     (29) funcdecl -> . ID COLON FUNCTION returntype paramdecl INHERIT ID blockstmt
     (30) funcdecl -> . ID COLON FUNCTION returntype paramdecl blockstmt
     (6) vardecl -> . ID subvardecl exp0 SEMICOLON
-    (7) vardecl -> . ID subvardecl
+    (7) vardecl -> . ID subvardecl2
     (8) vardecl -> . ID COLON typeof SEMICOLON
     $end            reduce using rule 3 (decllist -> decl .)
     ID              shift and go to state 6
@@ -301,16 +303,16 @@ state 6
     (29) funcdecl -> ID . COLON FUNCTION returntype paramdecl INHERIT ID blockstmt
     (30) funcdecl -> ID . COLON FUNCTION returntype paramdecl blockstmt
     (6) vardecl -> ID . subvardecl exp0 SEMICOLON
-    (7) vardecl -> ID . subvardecl
+    (7) vardecl -> ID . subvardecl2
     (8) vardecl -> ID . COLON typeof SEMICOLON
-    (9) subvardecl -> . COLON typeof SEMICOLON
-    (10) subvardecl -> . COMMA ID subvardecl
-    (11) subvardecl -> . COLON typeof ASSIGNMENT
-    (12) subvardecl -> . COMMA ID subvardecl exp0 COMMA
+    (9) subvardecl -> . COLON typeof ASSIGNMENT
+    (10) subvardecl -> . COMMA ID subvardecl exp0 COMMA
+    (11) subvardecl2 -> . COMMA ID subvardecl3
     COLON           shift and go to state 8
-    COMMA           shift and go to state 10
+    COMMA           shift and go to state 11
 
     subvardecl                     shift and go to state 9
+    subvardecl2                    shift and go to state 10
 
 state 7
 
@@ -323,8 +325,7 @@ state 8
     (29) funcdecl -> ID COLON . FUNCTION returntype paramdecl INHERIT ID blockstmt
     (30) funcdecl -> ID COLON . FUNCTION returntype paramdecl blockstmt
     (8) vardecl -> ID COLON . typeof SEMICOLON
-    (9) subvardecl -> COLON . typeof SEMICOLON
-    (11) subvardecl -> COLON . typeof ASSIGNMENT
+    (9) subvardecl -> COLON . typeof ASSIGNMENT
     (15) typeof -> . arrtype
     (16) typeof -> . atotype
     (17) typeof -> . AUTO
@@ -333,22 +334,21 @@ state 8
     (19) atotype -> . FLOAT
     (20) atotype -> . INTEGER
     (21) atotype -> . BOOLEAN
-    FUNCTION        shift and go to state 11
-    AUTO            shift and go to state 15
-    ARRAY           shift and go to state 16
-    STRING          shift and go to state 17
-    FLOAT           shift and go to state 18
-    INTEGER         shift and go to state 19
-    BOOLEAN         shift and go to state 20
+    FUNCTION        shift and go to state 12
+    AUTO            shift and go to state 16
+    ARRAY           shift and go to state 17
+    STRING          shift and go to state 18
+    FLOAT           shift and go to state 19
+    INTEGER         shift and go to state 20
+    BOOLEAN         shift and go to state 21
 
-    typeof                         shift and go to state 12
-    arrtype                        shift and go to state 13
-    atotype                        shift and go to state 14
+    typeof                         shift and go to state 13
+    arrtype                        shift and go to state 14
+    atotype                        shift and go to state 15
 
 state 9
 
     (6) vardecl -> ID subvardecl . exp0 SEMICOLON
-    (7) vardecl -> ID subvardecl .
     (91) exp0 -> . exp1
     (83) exp1 -> . exp2
     (84) exp1 -> . exp2 EQUAL exp2
@@ -386,49 +386,54 @@ state 9
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-  ! shift/reduce conflict for ID resolved as shift
-  ! shift/reduce conflict for LBRACE resolved as shift
-    $end            reduce using rule 7 (vardecl -> ID subvardecl .)
-    IF              reduce using rule 7 (vardecl -> ID subvardecl .)
-    RETURN          reduce using rule 7 (vardecl -> ID subvardecl .)
-    CONTINUE        reduce using rule 7 (vardecl -> ID subvardecl .)
-    BREAK           reduce using rule 7 (vardecl -> ID subvardecl .)
-    DO              reduce using rule 7 (vardecl -> ID subvardecl .)
-    WHILE           reduce using rule 7 (vardecl -> ID subvardecl .)
-    FOR             reduce using rule 7 (vardecl -> ID subvardecl .)
-    RBRACE          reduce using rule 7 (vardecl -> ID subvardecl .)
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp0                           shift and go to state 22
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp0                           shift and go to state 23
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
 state 10
 
-    (10) subvardecl -> COMMA . ID subvardecl
-    (12) subvardecl -> COMMA . ID subvardecl exp0 COMMA
-    ID              shift and go to state 43
+    (7) vardecl -> ID subvardecl2 .
+    ID              reduce using rule 7 (vardecl -> ID subvardecl2 .)
+    $end            reduce using rule 7 (vardecl -> ID subvardecl2 .)
+    IF              reduce using rule 7 (vardecl -> ID subvardecl2 .)
+    LBRACE          reduce using rule 7 (vardecl -> ID subvardecl2 .)
+    RETURN          reduce using rule 7 (vardecl -> ID subvardecl2 .)
+    CONTINUE        reduce using rule 7 (vardecl -> ID subvardecl2 .)
+    BREAK           reduce using rule 7 (vardecl -> ID subvardecl2 .)
+    DO              reduce using rule 7 (vardecl -> ID subvardecl2 .)
+    WHILE           reduce using rule 7 (vardecl -> ID subvardecl2 .)
+    FOR             reduce using rule 7 (vardecl -> ID subvardecl2 .)
+    RBRACE          reduce using rule 7 (vardecl -> ID subvardecl2 .)
 
 
 state 11
+
+    (10) subvardecl -> COMMA . ID subvardecl exp0 COMMA
+    (11) subvardecl2 -> COMMA . ID subvardecl3
+    ID              shift and go to state 44
+
+
+state 12
 
     (29) funcdecl -> ID COLON FUNCTION . returntype paramdecl INHERIT ID blockstmt
     (30) funcdecl -> ID COLON FUNCTION . returntype paramdecl blockstmt
@@ -441,28 +446,27 @@ state 11
     (19) atotype -> . FLOAT
     (20) atotype -> . INTEGER
     (21) atotype -> . BOOLEAN
-    VOID            shift and go to state 47
-    AUTO            shift and go to state 48
-    ARRAY           shift and go to state 16
-    STRING          shift and go to state 17
-    FLOAT           shift and go to state 18
-    INTEGER         shift and go to state 19
-    BOOLEAN         shift and go to state 20
+    VOID            shift and go to state 48
+    AUTO            shift and go to state 49
+    ARRAY           shift and go to state 17
+    STRING          shift and go to state 18
+    FLOAT           shift and go to state 19
+    INTEGER         shift and go to state 20
+    BOOLEAN         shift and go to state 21
 
-    returntype                     shift and go to state 44
-    arrtype                        shift and go to state 45
-    atotype                        shift and go to state 46
-
-state 12
-
-    (8) vardecl -> ID COLON typeof . SEMICOLON
-    (9) subvardecl -> COLON typeof . SEMICOLON
-    (11) subvardecl -> COLON typeof . ASSIGNMENT
-    SEMICOLON       shift and go to state 49
-    ASSIGNMENT      shift and go to state 50
-
+    returntype                     shift and go to state 45
+    arrtype                        shift and go to state 46
+    atotype                        shift and go to state 47
 
 state 13
+
+    (8) vardecl -> ID COLON typeof . SEMICOLON
+    (9) subvardecl -> COLON typeof . ASSIGNMENT
+    SEMICOLON       shift and go to state 50
+    ASSIGNMENT      shift and go to state 51
+
+
+state 14
 
     (15) typeof -> arrtype .
     SEMICOLON       reduce using rule 15 (typeof -> arrtype .)
@@ -471,7 +475,7 @@ state 13
     RPAREN          reduce using rule 15 (typeof -> arrtype .)
 
 
-state 14
+state 15
 
     (16) typeof -> atotype .
     SEMICOLON       reduce using rule 16 (typeof -> atotype .)
@@ -480,7 +484,7 @@ state 14
     RPAREN          reduce using rule 16 (typeof -> atotype .)
 
 
-state 15
+state 16
 
     (17) typeof -> AUTO .
     SEMICOLON       reduce using rule 17 (typeof -> AUTO .)
@@ -489,13 +493,13 @@ state 15
     RPAREN          reduce using rule 17 (typeof -> AUTO .)
 
 
-state 16
+state 17
 
     (22) arrtype -> ARRAY . LBRACKET dime RBRACKET OF atotype
-    LBRACKET        shift and go to state 51
+    LBRACKET        shift and go to state 52
 
 
-state 17
+state 18
 
     (18) atotype -> STRING .
     SEMICOLON       reduce using rule 18 (atotype -> STRING .)
@@ -505,7 +509,7 @@ state 17
     RPAREN          reduce using rule 18 (atotype -> STRING .)
 
 
-state 18
+state 19
 
     (19) atotype -> FLOAT .
     SEMICOLON       reduce using rule 19 (atotype -> FLOAT .)
@@ -515,7 +519,7 @@ state 18
     RPAREN          reduce using rule 19 (atotype -> FLOAT .)
 
 
-state 19
+state 20
 
     (20) atotype -> INTEGER .
     SEMICOLON       reduce using rule 20 (atotype -> INTEGER .)
@@ -525,7 +529,7 @@ state 19
     RPAREN          reduce using rule 20 (atotype -> INTEGER .)
 
 
-state 20
+state 21
 
     (21) atotype -> BOOLEAN .
     SEMICOLON       reduce using rule 21 (atotype -> BOOLEAN .)
@@ -535,12 +539,12 @@ state 20
     RPAREN          reduce using rule 21 (atotype -> BOOLEAN .)
 
 
-state 21
+state 22
 
     (107) exp7 -> ID . LBRACKET expprime RBRACKET
     (112) exp9 -> ID .
     (77) funcall -> ID . LPAREN explist RPAREN
-    LBRACKET        shift and go to state 52
+    LBRACKET        shift and go to state 53
     MUL             reduce using rule 112 (exp9 -> ID .)
     DIV             reduce using rule 112 (exp9 -> ID .)
     MOD             reduce using rule 112 (exp9 -> ID .)
@@ -560,16 +564,16 @@ state 21
     COMMA           reduce using rule 112 (exp9 -> ID .)
     RBRACE          reduce using rule 112 (exp9 -> ID .)
     RBRACKET        reduce using rule 112 (exp9 -> ID .)
-    LPAREN          shift and go to state 53
-
-
-state 22
-
-    (6) vardecl -> ID subvardecl exp0 . SEMICOLON
-    SEMICOLON       shift and go to state 54
+    LPAREN          shift and go to state 54
 
 
 state 23
+
+    (6) vardecl -> ID subvardecl exp0 . SEMICOLON
+    SEMICOLON       shift and go to state 55
+
+
+state 24
 
     (91) exp0 -> exp1 .
     (90) exp1 -> exp1 . DOUBLECOLON exp1
@@ -578,10 +582,10 @@ state 23
     COMMA           reduce using rule 91 (exp0 -> exp1 .)
     RBRACE          reduce using rule 91 (exp0 -> exp1 .)
     RBRACKET        reduce using rule 91 (exp0 -> exp1 .)
-    DOUBLECOLON     shift and go to state 55
+    DOUBLECOLON     shift and go to state 56
 
 
-state 24
+state 25
 
     (83) exp1 -> exp2 .
     (84) exp1 -> exp2 . EQUAL exp2
@@ -598,17 +602,17 @@ state 24
     COMMA           reduce using rule 83 (exp1 -> exp2 .)
     RBRACE          reduce using rule 83 (exp1 -> exp2 .)
     RBRACKET        reduce using rule 83 (exp1 -> exp2 .)
-    EQUAL           shift and go to state 56
-    NOTEQUAL        shift and go to state 57
-    LESSTHAN        shift and go to state 58
-    LEQ             shift and go to state 59
-    GREATERTHAN     shift and go to state 60
-    GEQ             shift and go to state 61
-    AND             shift and go to state 62
-    OR              shift and go to state 63
+    EQUAL           shift and go to state 57
+    NOTEQUAL        shift and go to state 58
+    LESSTHAN        shift and go to state 59
+    LEQ             shift and go to state 60
+    GREATERTHAN     shift and go to state 61
+    GEQ             shift and go to state 62
+    AND             shift and go to state 63
+    OR              shift and go to state 64
 
 
-state 25
+state 26
 
     (92) exp2 -> exp3 .
     (99) exp4 -> exp3 . PLUS exp4
@@ -627,11 +631,11 @@ state 25
     COMMA           reduce using rule 92 (exp2 -> exp3 .)
     RBRACE          reduce using rule 92 (exp2 -> exp3 .)
     RBRACKET        reduce using rule 92 (exp2 -> exp3 .)
-    PLUS            shift and go to state 64
-    MINUS           shift and go to state 65
+    PLUS            shift and go to state 65
+    MINUS           shift and go to state 66
 
 
-state 26
+state 27
 
     (101) exp3 -> exp4 .
     (96) exp4 -> exp4 . MUL exp5
@@ -653,12 +657,12 @@ state 26
     COMMA           reduce using rule 101 (exp3 -> exp4 .)
     RBRACE          reduce using rule 101 (exp3 -> exp4 .)
     RBRACKET        reduce using rule 101 (exp3 -> exp4 .)
-    MUL             shift and go to state 66
-    DIV             shift and go to state 67
-    MOD             shift and go to state 68
+    MUL             shift and go to state 67
+    DIV             shift and go to state 68
+    MOD             shift and go to state 69
 
 
-state 27
+state 28
 
     (95) exp4 -> exp5 .
     MUL             reduce using rule 95 (exp4 -> exp5 .)
@@ -682,7 +686,7 @@ state 27
     RBRACKET        reduce using rule 95 (exp4 -> exp5 .)
 
 
-state 28
+state 29
 
     (105) exp6 -> MINUS . exp6
     (104) exp6 -> . exp7
@@ -701,24 +705,24 @@ state 28
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp6                           shift and go to state 69
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp6                           shift and go to state 70
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 29
+state 30
 
     (102) exp5 -> exp6 .
     MUL             reduce using rule 102 (exp5 -> exp6 .)
@@ -742,7 +746,7 @@ state 29
     RBRACKET        reduce using rule 102 (exp5 -> exp6 .)
 
 
-state 30
+state 31
 
     (103) exp5 -> NOT . exp5
     (102) exp5 -> . exp6
@@ -763,26 +767,26 @@ state 30
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp5                           shift and go to state 70
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp5                           shift and go to state 71
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 31
+state 32
 
     (104) exp6 -> exp7 .
     MUL             reduce using rule 104 (exp6 -> exp7 .)
@@ -806,7 +810,7 @@ state 31
     RBRACKET        reduce using rule 104 (exp6 -> exp7 .)
 
 
-state 32
+state 33
 
     (106) exp7 -> exp8 .
     MUL             reduce using rule 106 (exp7 -> exp8 .)
@@ -830,7 +834,7 @@ state 32
     RBRACKET        reduce using rule 106 (exp7 -> exp8 .)
 
 
-state 33
+state 34
 
     (108) exp8 -> exp9 .
     MUL             reduce using rule 108 (exp8 -> exp9 .)
@@ -854,7 +858,7 @@ state 33
     RBRACKET        reduce using rule 108 (exp8 -> exp9 .)
 
 
-state 34
+state 35
 
     (109) exp8 -> funcall .
     MUL             reduce using rule 109 (exp8 -> funcall .)
@@ -878,7 +882,7 @@ state 34
     RBRACKET        reduce using rule 109 (exp8 -> funcall .)
 
 
-state 35
+state 36
 
     (110) exp9 -> exp10 .
     MUL             reduce using rule 110 (exp9 -> exp10 .)
@@ -902,7 +906,7 @@ state 35
     RBRACKET        reduce using rule 110 (exp9 -> exp10 .)
 
 
-state 36
+state 37
 
     (111) exp9 -> arraylit .
     MUL             reduce using rule 111 (exp9 -> arraylit .)
@@ -926,7 +930,7 @@ state 36
     RBRACKET        reduce using rule 111 (exp9 -> arraylit .)
 
 
-state 37
+state 38
 
     (113) exp9 -> STRINGLIT .
     MUL             reduce using rule 113 (exp9 -> STRINGLIT .)
@@ -950,7 +954,7 @@ state 37
     RBRACKET        reduce using rule 113 (exp9 -> STRINGLIT .)
 
 
-state 38
+state 39
 
     (114) exp9 -> BOOLEANLIT .
     MUL             reduce using rule 114 (exp9 -> BOOLEANLIT .)
@@ -974,7 +978,7 @@ state 38
     RBRACKET        reduce using rule 114 (exp9 -> BOOLEANLIT .)
 
 
-state 39
+state 40
 
     (115) exp9 -> FLOATLIT .
     MUL             reduce using rule 115 (exp9 -> FLOATLIT .)
@@ -998,7 +1002,7 @@ state 39
     RBRACKET        reduce using rule 115 (exp9 -> FLOATLIT .)
 
 
-state 40
+state 41
 
     (116) exp9 -> INTLIT .
     MUL             reduce using rule 116 (exp9 -> INTLIT .)
@@ -1022,7 +1026,7 @@ state 40
     RBRACKET        reduce using rule 116 (exp9 -> INTLIT .)
 
 
-state 41
+state 42
 
     (117) exp10 -> LPAREN . exp0 RPAREN
     (91) exp0 -> . exp1
@@ -1062,31 +1066,31 @@ state 41
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp0                           shift and go to state 71
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp0                           shift and go to state 72
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 42
+state 43
 
     (78) arraylit -> LBRACE . explist RBRACE
     (79) explist -> . empty
@@ -1132,94 +1136,82 @@ state 42
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
     RBRACE          reduce using rule 118 (empty -> .)
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    explist                        shift and go to state 72
-    empty                          shift and go to state 73
-    expprime                       shift and go to state 74
-    exp0                           shift and go to state 75
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
-
-state 43
-
-    (10) subvardecl -> COMMA ID . subvardecl
-    (12) subvardecl -> COMMA ID . subvardecl exp0 COMMA
-    (9) subvardecl -> . COLON typeof SEMICOLON
-    (10) subvardecl -> . COMMA ID subvardecl
-    (11) subvardecl -> . COLON typeof ASSIGNMENT
-    (12) subvardecl -> . COMMA ID subvardecl exp0 COMMA
-    COLON           shift and go to state 77
-    COMMA           shift and go to state 10
-
-    subvardecl                     shift and go to state 76
+    explist                        shift and go to state 73
+    empty                          shift and go to state 74
+    expprime                       shift and go to state 75
+    exp0                           shift and go to state 76
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
 state 44
+
+    (10) subvardecl -> COMMA ID . subvardecl exp0 COMMA
+    (11) subvardecl2 -> COMMA ID . subvardecl3
+    (9) subvardecl -> . COLON typeof ASSIGNMENT
+    (10) subvardecl -> . COMMA ID subvardecl exp0 COMMA
+    (12) subvardecl3 -> . COLON typeof SEMICOLON
+    COLON           shift and go to state 80
+    COMMA           shift and go to state 77
+
+    subvardecl                     shift and go to state 78
+    subvardecl3                    shift and go to state 79
+
+state 45
 
     (29) funcdecl -> ID COLON FUNCTION returntype . paramdecl INHERIT ID blockstmt
     (30) funcdecl -> ID COLON FUNCTION returntype . paramdecl blockstmt
     (31) paramdecl -> . LPAREN paramlist RPAREN
-    LPAREN          shift and go to state 79
+    LPAREN          shift and go to state 82
 
-    paramdecl                      shift and go to state 78
+    paramdecl                      shift and go to state 81
 
-state 45
+state 46
 
     (25) returntype -> arrtype .
     LPAREN          reduce using rule 25 (returntype -> arrtype .)
 
 
-state 46
+state 47
 
     (26) returntype -> atotype .
     LPAREN          reduce using rule 26 (returntype -> atotype .)
 
 
-state 47
+state 48
 
     (27) returntype -> VOID .
     LPAREN          reduce using rule 27 (returntype -> VOID .)
 
 
-state 48
+state 49
 
     (28) returntype -> AUTO .
     LPAREN          reduce using rule 28 (returntype -> AUTO .)
 
 
-state 49
+state 50
 
     (8) vardecl -> ID COLON typeof SEMICOLON .
-    (9) subvardecl -> COLON typeof SEMICOLON .
-  ! reduce/reduce conflict for ID resolved using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
-  ! reduce/reduce conflict for LBRACE resolved using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
-  ! reduce/reduce conflict for $end resolved using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
-  ! reduce/reduce conflict for IF resolved using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
-  ! reduce/reduce conflict for RETURN resolved using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
-  ! reduce/reduce conflict for CONTINUE resolved using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
-  ! reduce/reduce conflict for BREAK resolved using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
-  ! reduce/reduce conflict for DO resolved using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
-  ! reduce/reduce conflict for WHILE resolved using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
-  ! reduce/reduce conflict for FOR resolved using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
-  ! reduce/reduce conflict for RBRACE resolved using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
     ID              reduce using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
     $end            reduce using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
     IF              reduce using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
@@ -1231,48 +1223,32 @@ state 49
     WHILE           reduce using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
     FOR             reduce using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
     RBRACE          reduce using rule 8 (vardecl -> ID COLON typeof SEMICOLON .)
-    NOT             reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    MINUS           reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    STRINGLIT       reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    BOOLEANLIT      reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    FLOATLIT        reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    INTLIT          reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    LPAREN          reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-
-
-state 50
-
-    (11) subvardecl -> COLON typeof ASSIGNMENT .
-    NOT             reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    MINUS           reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    ID              reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    STRINGLIT       reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    BOOLEANLIT      reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    FLOATLIT        reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    INTLIT          reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    LPAREN          reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    LBRACE          reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    $end            reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    IF              reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    RETURN          reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    CONTINUE        reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    BREAK           reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    DO              reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    WHILE           reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    FOR             reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
-    RBRACE          reduce using rule 11 (subvardecl -> COLON typeof ASSIGNMENT .)
 
 
 state 51
 
+    (9) subvardecl -> COLON typeof ASSIGNMENT .
+    NOT             reduce using rule 9 (subvardecl -> COLON typeof ASSIGNMENT .)
+    MINUS           reduce using rule 9 (subvardecl -> COLON typeof ASSIGNMENT .)
+    ID              reduce using rule 9 (subvardecl -> COLON typeof ASSIGNMENT .)
+    STRINGLIT       reduce using rule 9 (subvardecl -> COLON typeof ASSIGNMENT .)
+    BOOLEANLIT      reduce using rule 9 (subvardecl -> COLON typeof ASSIGNMENT .)
+    FLOATLIT        reduce using rule 9 (subvardecl -> COLON typeof ASSIGNMENT .)
+    INTLIT          reduce using rule 9 (subvardecl -> COLON typeof ASSIGNMENT .)
+    LPAREN          reduce using rule 9 (subvardecl -> COLON typeof ASSIGNMENT .)
+    LBRACE          reduce using rule 9 (subvardecl -> COLON typeof ASSIGNMENT .)
+
+
+state 52
+
     (22) arrtype -> ARRAY LBRACKET . dime RBRACKET OF atotype
     (23) dime -> . INTLIT
     (24) dime -> . INTLIT COMMA dime
-    INTLIT          shift and go to state 81
+    INTLIT          shift and go to state 84
 
-    dime                           shift and go to state 80
+    dime                           shift and go to state 83
 
-state 52
+state 53
 
     (107) exp7 -> ID LBRACKET . expprime RBRACKET
     (81) expprime -> . exp0
@@ -1314,32 +1290,32 @@ state 52
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    expprime                       shift and go to state 82
-    exp0                           shift and go to state 75
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    expprime                       shift and go to state 85
+    exp0                           shift and go to state 76
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 53
+state 54
 
     (77) funcall -> ID LPAREN . explist RPAREN
     (79) explist -> . empty
@@ -1385,34 +1361,34 @@ state 53
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
     RPAREN          reduce using rule 118 (empty -> .)
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    explist                        shift and go to state 83
-    empty                          shift and go to state 73
-    expprime                       shift and go to state 74
-    exp0                           shift and go to state 75
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    explist                        shift and go to state 86
+    empty                          shift and go to state 74
+    expprime                       shift and go to state 75
+    exp0                           shift and go to state 76
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 54
+state 55
 
     (6) vardecl -> ID subvardecl exp0 SEMICOLON .
     ID              reduce using rule 6 (vardecl -> ID subvardecl exp0 SEMICOLON .)
@@ -1428,7 +1404,7 @@ state 54
     RBRACE          reduce using rule 6 (vardecl -> ID subvardecl exp0 SEMICOLON .)
 
 
-state 55
+state 56
 
     (90) exp1 -> exp1 DOUBLECOLON . exp1
     (83) exp1 -> . exp2
@@ -1467,30 +1443,30 @@ state 55
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp1                           shift and go to state 84
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp1                           shift and go to state 87
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 56
+state 57
 
     (84) exp1 -> exp2 EQUAL . exp2
     (92) exp2 -> . exp3
@@ -1521,29 +1497,29 @@ state 56
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp2                           shift and go to state 85
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp2                           shift and go to state 88
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 57
+state 58
 
     (85) exp1 -> exp2 NOTEQUAL . exp2
     (92) exp2 -> . exp3
@@ -1574,29 +1550,29 @@ state 57
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp2                           shift and go to state 86
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp2                           shift and go to state 89
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 58
+state 59
 
     (86) exp1 -> exp2 LESSTHAN . exp2
     (92) exp2 -> . exp3
@@ -1627,29 +1603,29 @@ state 58
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp2                           shift and go to state 87
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp2                           shift and go to state 90
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 59
+state 60
 
     (87) exp1 -> exp2 LEQ . exp2
     (92) exp2 -> . exp3
@@ -1680,29 +1656,29 @@ state 59
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp2                           shift and go to state 88
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp2                           shift and go to state 91
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 60
+state 61
 
     (88) exp1 -> exp2 GREATERTHAN . exp2
     (92) exp2 -> . exp3
@@ -1733,29 +1709,29 @@ state 60
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp2                           shift and go to state 89
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp2                           shift and go to state 92
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 61
+state 62
 
     (89) exp1 -> exp2 GEQ . exp2
     (92) exp2 -> . exp3
@@ -1786,29 +1762,29 @@ state 61
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp2                           shift and go to state 90
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp2                           shift and go to state 93
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 62
+state 63
 
     (93) exp2 -> exp2 AND . exp3
     (101) exp3 -> . exp4
@@ -1836,28 +1812,28 @@ state 62
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp3                           shift and go to state 91
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp3                           shift and go to state 94
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 63
+state 64
 
     (94) exp2 -> exp2 OR . exp3
     (101) exp3 -> . exp4
@@ -1885,28 +1861,28 @@ state 63
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp3                           shift and go to state 92
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp3                           shift and go to state 95
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 64
+state 65
 
     (99) exp4 -> exp3 PLUS . exp4
     (95) exp4 -> . exp5
@@ -1934,28 +1910,28 @@ state 64
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp3                           shift and go to state 93
-    exp4                           shift and go to state 94
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp3                           shift and go to state 96
+    exp4                           shift and go to state 97
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 65
+state 66
 
     (100) exp4 -> exp3 MINUS . exp4
     (95) exp4 -> . exp5
@@ -1983,28 +1959,28 @@ state 65
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp3                           shift and go to state 93
-    exp4                           shift and go to state 95
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp3                           shift and go to state 96
+    exp4                           shift and go to state 98
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 66
+state 67
 
     (96) exp4 -> exp4 MUL . exp5
     (102) exp5 -> . exp6
@@ -2025,26 +2001,26 @@ state 66
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp5                           shift and go to state 96
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp5                           shift and go to state 99
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 67
+state 68
 
     (97) exp4 -> exp4 DIV . exp5
     (102) exp5 -> . exp6
@@ -2065,26 +2041,26 @@ state 67
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp5                           shift and go to state 97
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp5                           shift and go to state 100
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 68
+state 69
 
     (98) exp4 -> exp4 MOD . exp5
     (102) exp5 -> . exp6
@@ -2105,26 +2081,26 @@ state 68
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp5                           shift and go to state 98
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp5                           shift and go to state 101
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 69
+state 70
 
     (105) exp6 -> MINUS exp6 .
     MUL             reduce using rule 105 (exp6 -> MINUS exp6 .)
@@ -2148,7 +2124,7 @@ state 69
     RBRACKET        reduce using rule 105 (exp6 -> MINUS exp6 .)
 
 
-state 70
+state 71
 
     (103) exp5 -> NOT exp5 .
     MUL             reduce using rule 103 (exp5 -> NOT exp5 .)
@@ -2172,46 +2148,51 @@ state 70
     RBRACKET        reduce using rule 103 (exp5 -> NOT exp5 .)
 
 
-state 71
-
-    (117) exp10 -> LPAREN exp0 . RPAREN
-    RPAREN          shift and go to state 99
-
-
 state 72
 
-    (78) arraylit -> LBRACE explist . RBRACE
-    RBRACE          shift and go to state 100
+    (117) exp10 -> LPAREN exp0 . RPAREN
+    RPAREN          shift and go to state 102
 
 
 state 73
+
+    (78) arraylit -> LBRACE explist . RBRACE
+    RBRACE          shift and go to state 103
+
+
+state 74
 
     (79) explist -> empty .
     RBRACE          reduce using rule 79 (explist -> empty .)
     RPAREN          reduce using rule 79 (explist -> empty .)
 
 
-state 74
+state 75
 
     (80) explist -> expprime .
     RBRACE          reduce using rule 80 (explist -> expprime .)
     RPAREN          reduce using rule 80 (explist -> expprime .)
 
 
-state 75
+state 76
 
     (81) expprime -> exp0 .
     (82) expprime -> exp0 . COMMA expprime
     RBRACE          reduce using rule 81 (expprime -> exp0 .)
     RBRACKET        reduce using rule 81 (expprime -> exp0 .)
     RPAREN          reduce using rule 81 (expprime -> exp0 .)
-    COMMA           shift and go to state 101
+    COMMA           shift and go to state 104
 
 
-state 76
+state 77
 
-    (10) subvardecl -> COMMA ID subvardecl .
-    (12) subvardecl -> COMMA ID subvardecl . exp0 COMMA
+    (10) subvardecl -> COMMA . ID subvardecl exp0 COMMA
+    ID              shift and go to state 105
+
+
+state 78
+
+    (10) subvardecl -> COMMA ID subvardecl . exp0 COMMA
     (91) exp0 -> . exp1
     (83) exp1 -> . exp2
     (84) exp1 -> . exp2 EQUAL exp2
@@ -2249,52 +2230,50 @@ state 76
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-  ! shift/reduce conflict for NOT resolved as shift
-  ! shift/reduce conflict for MINUS resolved as shift
-  ! shift/reduce conflict for ID resolved as shift
-  ! shift/reduce conflict for STRINGLIT resolved as shift
-  ! shift/reduce conflict for BOOLEANLIT resolved as shift
-  ! shift/reduce conflict for FLOATLIT resolved as shift
-  ! shift/reduce conflict for INTLIT resolved as shift
-  ! shift/reduce conflict for LPAREN resolved as shift
-  ! shift/reduce conflict for LBRACE resolved as shift
-    $end            reduce using rule 10 (subvardecl -> COMMA ID subvardecl .)
-    IF              reduce using rule 10 (subvardecl -> COMMA ID subvardecl .)
-    RETURN          reduce using rule 10 (subvardecl -> COMMA ID subvardecl .)
-    CONTINUE        reduce using rule 10 (subvardecl -> COMMA ID subvardecl .)
-    BREAK           reduce using rule 10 (subvardecl -> COMMA ID subvardecl .)
-    DO              reduce using rule 10 (subvardecl -> COMMA ID subvardecl .)
-    WHILE           reduce using rule 10 (subvardecl -> COMMA ID subvardecl .)
-    FOR             reduce using rule 10 (subvardecl -> COMMA ID subvardecl .)
-    RBRACE          reduce using rule 10 (subvardecl -> COMMA ID subvardecl .)
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp0                           shift and go to state 102
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp0                           shift and go to state 106
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 77
+state 79
 
-    (9) subvardecl -> COLON . typeof SEMICOLON
-    (11) subvardecl -> COLON . typeof ASSIGNMENT
+    (11) subvardecl2 -> COMMA ID subvardecl3 .
+    ID              reduce using rule 11 (subvardecl2 -> COMMA ID subvardecl3 .)
+    $end            reduce using rule 11 (subvardecl2 -> COMMA ID subvardecl3 .)
+    IF              reduce using rule 11 (subvardecl2 -> COMMA ID subvardecl3 .)
+    LBRACE          reduce using rule 11 (subvardecl2 -> COMMA ID subvardecl3 .)
+    RETURN          reduce using rule 11 (subvardecl2 -> COMMA ID subvardecl3 .)
+    CONTINUE        reduce using rule 11 (subvardecl2 -> COMMA ID subvardecl3 .)
+    BREAK           reduce using rule 11 (subvardecl2 -> COMMA ID subvardecl3 .)
+    DO              reduce using rule 11 (subvardecl2 -> COMMA ID subvardecl3 .)
+    WHILE           reduce using rule 11 (subvardecl2 -> COMMA ID subvardecl3 .)
+    FOR             reduce using rule 11 (subvardecl2 -> COMMA ID subvardecl3 .)
+    RBRACE          reduce using rule 11 (subvardecl2 -> COMMA ID subvardecl3 .)
+
+
+state 80
+
+    (9) subvardecl -> COLON . typeof ASSIGNMENT
+    (12) subvardecl3 -> COLON . typeof SEMICOLON
     (15) typeof -> . arrtype
     (16) typeof -> . atotype
     (17) typeof -> . AUTO
@@ -2303,28 +2282,28 @@ state 77
     (19) atotype -> . FLOAT
     (20) atotype -> . INTEGER
     (21) atotype -> . BOOLEAN
-    AUTO            shift and go to state 15
-    ARRAY           shift and go to state 16
-    STRING          shift and go to state 17
-    FLOAT           shift and go to state 18
-    INTEGER         shift and go to state 19
-    BOOLEAN         shift and go to state 20
+    AUTO            shift and go to state 16
+    ARRAY           shift and go to state 17
+    STRING          shift and go to state 18
+    FLOAT           shift and go to state 19
+    INTEGER         shift and go to state 20
+    BOOLEAN         shift and go to state 21
 
-    typeof                         shift and go to state 103
-    arrtype                        shift and go to state 13
-    atotype                        shift and go to state 14
+    typeof                         shift and go to state 107
+    arrtype                        shift and go to state 14
+    atotype                        shift and go to state 15
 
-state 78
+state 81
 
     (29) funcdecl -> ID COLON FUNCTION returntype paramdecl . INHERIT ID blockstmt
     (30) funcdecl -> ID COLON FUNCTION returntype paramdecl . blockstmt
     (76) blockstmt -> . LBRACE stmtlist RBRACE
-    INHERIT         shift and go to state 104
-    LBRACE          shift and go to state 106
+    INHERIT         shift and go to state 108
+    LBRACE          shift and go to state 110
 
-    blockstmt                      shift and go to state 105
+    blockstmt                      shift and go to state 109
 
-state 79
+state 82
 
     (31) paramdecl -> LPAREN . paramlist RPAREN
     (32) paramlist -> . empty
@@ -2337,42 +2316,42 @@ state 79
     (38) param -> . ID COLON typeof
     (39) param -> . INHERIT OUT ID COLON typeof
     RPAREN          reduce using rule 118 (empty -> .)
-    OUT             shift and go to state 111
-    INHERIT         shift and go to state 113
-    ID              shift and go to state 112
+    OUT             shift and go to state 115
+    INHERIT         shift and go to state 117
+    ID              shift and go to state 116
 
-    paramlist                      shift and go to state 107
-    empty                          shift and go to state 108
-    paramprime                     shift and go to state 109
-    param                          shift and go to state 110
+    paramlist                      shift and go to state 111
+    empty                          shift and go to state 112
+    paramprime                     shift and go to state 113
+    param                          shift and go to state 114
 
-state 80
+state 83
 
     (22) arrtype -> ARRAY LBRACKET dime . RBRACKET OF atotype
-    RBRACKET        shift and go to state 114
+    RBRACKET        shift and go to state 118
 
 
-state 81
+state 84
 
     (23) dime -> INTLIT .
     (24) dime -> INTLIT . COMMA dime
     RBRACKET        reduce using rule 23 (dime -> INTLIT .)
-    COMMA           shift and go to state 115
+    COMMA           shift and go to state 119
 
 
-state 82
+state 85
 
     (107) exp7 -> ID LBRACKET expprime . RBRACKET
-    RBRACKET        shift and go to state 116
+    RBRACKET        shift and go to state 120
 
 
-state 83
+state 86
 
     (77) funcall -> ID LPAREN explist . RPAREN
-    RPAREN          shift and go to state 117
+    RPAREN          shift and go to state 121
 
 
-state 84
+state 87
 
     (90) exp1 -> exp1 DOUBLECOLON exp1 .
     (90) exp1 -> exp1 . DOUBLECOLON exp1
@@ -2382,10 +2361,10 @@ state 84
     COMMA           reduce using rule 90 (exp1 -> exp1 DOUBLECOLON exp1 .)
     RBRACE          reduce using rule 90 (exp1 -> exp1 DOUBLECOLON exp1 .)
     RBRACKET        reduce using rule 90 (exp1 -> exp1 DOUBLECOLON exp1 .)
-    DOUBLECOLON     shift and go to state 55
+    DOUBLECOLON     shift and go to state 56
 
 
-state 85
+state 88
 
     (84) exp1 -> exp2 EQUAL exp2 .
     (93) exp2 -> exp2 . AND exp3
@@ -2396,11 +2375,11 @@ state 85
     COMMA           reduce using rule 84 (exp1 -> exp2 EQUAL exp2 .)
     RBRACE          reduce using rule 84 (exp1 -> exp2 EQUAL exp2 .)
     RBRACKET        reduce using rule 84 (exp1 -> exp2 EQUAL exp2 .)
-    AND             shift and go to state 62
-    OR              shift and go to state 63
+    AND             shift and go to state 63
+    OR              shift and go to state 64
 
 
-state 86
+state 89
 
     (85) exp1 -> exp2 NOTEQUAL exp2 .
     (93) exp2 -> exp2 . AND exp3
@@ -2411,11 +2390,11 @@ state 86
     COMMA           reduce using rule 85 (exp1 -> exp2 NOTEQUAL exp2 .)
     RBRACE          reduce using rule 85 (exp1 -> exp2 NOTEQUAL exp2 .)
     RBRACKET        reduce using rule 85 (exp1 -> exp2 NOTEQUAL exp2 .)
-    AND             shift and go to state 62
-    OR              shift and go to state 63
+    AND             shift and go to state 63
+    OR              shift and go to state 64
 
 
-state 87
+state 90
 
     (86) exp1 -> exp2 LESSTHAN exp2 .
     (93) exp2 -> exp2 . AND exp3
@@ -2426,11 +2405,11 @@ state 87
     COMMA           reduce using rule 86 (exp1 -> exp2 LESSTHAN exp2 .)
     RBRACE          reduce using rule 86 (exp1 -> exp2 LESSTHAN exp2 .)
     RBRACKET        reduce using rule 86 (exp1 -> exp2 LESSTHAN exp2 .)
-    AND             shift and go to state 62
-    OR              shift and go to state 63
+    AND             shift and go to state 63
+    OR              shift and go to state 64
 
 
-state 88
+state 91
 
     (87) exp1 -> exp2 LEQ exp2 .
     (93) exp2 -> exp2 . AND exp3
@@ -2441,11 +2420,11 @@ state 88
     COMMA           reduce using rule 87 (exp1 -> exp2 LEQ exp2 .)
     RBRACE          reduce using rule 87 (exp1 -> exp2 LEQ exp2 .)
     RBRACKET        reduce using rule 87 (exp1 -> exp2 LEQ exp2 .)
-    AND             shift and go to state 62
-    OR              shift and go to state 63
+    AND             shift and go to state 63
+    OR              shift and go to state 64
 
 
-state 89
+state 92
 
     (88) exp1 -> exp2 GREATERTHAN exp2 .
     (93) exp2 -> exp2 . AND exp3
@@ -2456,11 +2435,11 @@ state 89
     COMMA           reduce using rule 88 (exp1 -> exp2 GREATERTHAN exp2 .)
     RBRACE          reduce using rule 88 (exp1 -> exp2 GREATERTHAN exp2 .)
     RBRACKET        reduce using rule 88 (exp1 -> exp2 GREATERTHAN exp2 .)
-    AND             shift and go to state 62
-    OR              shift and go to state 63
+    AND             shift and go to state 63
+    OR              shift and go to state 64
 
 
-state 90
+state 93
 
     (89) exp1 -> exp2 GEQ exp2 .
     (93) exp2 -> exp2 . AND exp3
@@ -2471,11 +2450,11 @@ state 90
     COMMA           reduce using rule 89 (exp1 -> exp2 GEQ exp2 .)
     RBRACE          reduce using rule 89 (exp1 -> exp2 GEQ exp2 .)
     RBRACKET        reduce using rule 89 (exp1 -> exp2 GEQ exp2 .)
-    AND             shift and go to state 62
-    OR              shift and go to state 63
+    AND             shift and go to state 63
+    OR              shift and go to state 64
 
 
-state 91
+state 94
 
     (93) exp2 -> exp2 AND exp3 .
     (99) exp4 -> exp3 . PLUS exp4
@@ -2494,11 +2473,11 @@ state 91
     COMMA           reduce using rule 93 (exp2 -> exp2 AND exp3 .)
     RBRACE          reduce using rule 93 (exp2 -> exp2 AND exp3 .)
     RBRACKET        reduce using rule 93 (exp2 -> exp2 AND exp3 .)
-    PLUS            shift and go to state 64
-    MINUS           shift and go to state 65
+    PLUS            shift and go to state 65
+    MINUS           shift and go to state 66
 
 
-state 92
+state 95
 
     (94) exp2 -> exp2 OR exp3 .
     (99) exp4 -> exp3 . PLUS exp4
@@ -2517,19 +2496,19 @@ state 92
     COMMA           reduce using rule 94 (exp2 -> exp2 OR exp3 .)
     RBRACE          reduce using rule 94 (exp2 -> exp2 OR exp3 .)
     RBRACKET        reduce using rule 94 (exp2 -> exp2 OR exp3 .)
-    PLUS            shift and go to state 64
-    MINUS           shift and go to state 65
+    PLUS            shift and go to state 65
+    MINUS           shift and go to state 66
 
 
-state 93
+state 96
 
     (99) exp4 -> exp3 . PLUS exp4
     (100) exp4 -> exp3 . MINUS exp4
-    PLUS            shift and go to state 64
-    MINUS           shift and go to state 65
+    PLUS            shift and go to state 65
+    MINUS           shift and go to state 66
 
 
-state 94
+state 97
 
     (99) exp4 -> exp3 PLUS exp4 .
     (96) exp4 -> exp4 . MUL exp5
@@ -2557,12 +2536,12 @@ state 94
     COMMA           reduce using rule 99 (exp4 -> exp3 PLUS exp4 .)
     RBRACE          reduce using rule 99 (exp4 -> exp3 PLUS exp4 .)
     RBRACKET        reduce using rule 99 (exp4 -> exp3 PLUS exp4 .)
-    MUL             shift and go to state 66
-    DIV             shift and go to state 67
-    MOD             shift and go to state 68
+    MUL             shift and go to state 67
+    DIV             shift and go to state 68
+    MOD             shift and go to state 69
 
 
-state 95
+state 98
 
     (100) exp4 -> exp3 MINUS exp4 .
     (96) exp4 -> exp4 . MUL exp5
@@ -2590,12 +2569,12 @@ state 95
     COMMA           reduce using rule 100 (exp4 -> exp3 MINUS exp4 .)
     RBRACE          reduce using rule 100 (exp4 -> exp3 MINUS exp4 .)
     RBRACKET        reduce using rule 100 (exp4 -> exp3 MINUS exp4 .)
-    MUL             shift and go to state 66
-    DIV             shift and go to state 67
-    MOD             shift and go to state 68
+    MUL             shift and go to state 67
+    DIV             shift and go to state 68
+    MOD             shift and go to state 69
 
 
-state 96
+state 99
 
     (96) exp4 -> exp4 MUL exp5 .
     MUL             reduce using rule 96 (exp4 -> exp4 MUL exp5 .)
@@ -2619,7 +2598,7 @@ state 96
     RBRACKET        reduce using rule 96 (exp4 -> exp4 MUL exp5 .)
 
 
-state 97
+state 100
 
     (97) exp4 -> exp4 DIV exp5 .
     MUL             reduce using rule 97 (exp4 -> exp4 DIV exp5 .)
@@ -2643,7 +2622,7 @@ state 97
     RBRACKET        reduce using rule 97 (exp4 -> exp4 DIV exp5 .)
 
 
-state 98
+state 101
 
     (98) exp4 -> exp4 MOD exp5 .
     MUL             reduce using rule 98 (exp4 -> exp4 MOD exp5 .)
@@ -2667,7 +2646,7 @@ state 98
     RBRACKET        reduce using rule 98 (exp4 -> exp4 MOD exp5 .)
 
 
-state 99
+state 102
 
     (117) exp10 -> LPAREN exp0 RPAREN .
     MUL             reduce using rule 117 (exp10 -> LPAREN exp0 RPAREN .)
@@ -2691,7 +2670,7 @@ state 99
     RBRACKET        reduce using rule 117 (exp10 -> LPAREN exp0 RPAREN .)
 
 
-state 100
+state 103
 
     (78) arraylit -> LBRACE explist RBRACE .
     MUL             reduce using rule 78 (arraylit -> LBRACE explist RBRACE .)
@@ -2715,7 +2694,7 @@ state 100
     RBRACKET        reduce using rule 78 (arraylit -> LBRACE explist RBRACE .)
 
 
-state 101
+state 104
 
     (82) expprime -> exp0 COMMA . expprime
     (81) expprime -> . exp0
@@ -2757,59 +2736,69 @@ state 101
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp0                           shift and go to state 75
-    expprime                       shift and go to state 118
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
-
-state 102
-
-    (12) subvardecl -> COMMA ID subvardecl exp0 . COMMA
-    COMMA           shift and go to state 119
-
-
-state 103
-
-    (9) subvardecl -> COLON typeof . SEMICOLON
-    (11) subvardecl -> COLON typeof . ASSIGNMENT
-    SEMICOLON       shift and go to state 120
-    ASSIGNMENT      shift and go to state 50
-
-
-state 104
-
-    (29) funcdecl -> ID COLON FUNCTION returntype paramdecl INHERIT . ID blockstmt
-    ID              shift and go to state 121
-
+    exp0                           shift and go to state 76
+    expprime                       shift and go to state 122
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
 state 105
+
+    (10) subvardecl -> COMMA ID . subvardecl exp0 COMMA
+    (9) subvardecl -> . COLON typeof ASSIGNMENT
+    (10) subvardecl -> . COMMA ID subvardecl exp0 COMMA
+    COLON           shift and go to state 123
+    COMMA           shift and go to state 77
+
+    subvardecl                     shift and go to state 78
+
+state 106
+
+    (10) subvardecl -> COMMA ID subvardecl exp0 . COMMA
+    COMMA           shift and go to state 124
+
+
+state 107
+
+    (9) subvardecl -> COLON typeof . ASSIGNMENT
+    (12) subvardecl3 -> COLON typeof . SEMICOLON
+    ASSIGNMENT      shift and go to state 51
+    SEMICOLON       shift and go to state 125
+
+
+state 108
+
+    (29) funcdecl -> ID COLON FUNCTION returntype paramdecl INHERIT . ID blockstmt
+    ID              shift and go to state 126
+
+
+state 109
 
     (30) funcdecl -> ID COLON FUNCTION returntype paramdecl blockstmt .
     ID              reduce using rule 30 (funcdecl -> ID COLON FUNCTION returntype paramdecl blockstmt .)
     $end            reduce using rule 30 (funcdecl -> ID COLON FUNCTION returntype paramdecl blockstmt .)
 
 
-state 106
+state 110
 
     (76) blockstmt -> LBRACE . stmtlist RBRACE
     (40) stmtlist -> . empty
@@ -2822,7 +2811,7 @@ state 106
     (46) stmt -> . matchstmt
     (47) stmt -> . unmatchif
     (6) vardecl -> . ID subvardecl exp0 SEMICOLON
-    (7) vardecl -> . ID subvardecl
+    (7) vardecl -> . ID subvardecl2
     (8) vardecl -> . ID COLON typeof SEMICOLON
     (48) matchstmt -> . blockstmt
     (49) matchstmt -> . callstmt
@@ -2849,96 +2838,96 @@ state 106
     (58) assigstmt -> . ID ASSIGNMENT exp0 SEMICOLON
     (59) assigstmt -> . ID LBRACKET expprime RBRACKET ASSIGNMENT exp0 SEMICOLON
     RBRACE          reduce using rule 118 (empty -> .)
-    ID              shift and go to state 129
-    IF              shift and go to state 140
-    LBRACE          shift and go to state 106
-    RETURN          shift and go to state 141
-    CONTINUE        shift and go to state 142
-    BREAK           shift and go to state 143
-    DO              shift and go to state 144
-    WHILE           shift and go to state 145
-    FOR             shift and go to state 146
+    ID              shift and go to state 134
+    IF              shift and go to state 145
+    LBRACE          shift and go to state 110
+    RETURN          shift and go to state 146
+    CONTINUE        shift and go to state 147
+    BREAK           shift and go to state 148
+    DO              shift and go to state 149
+    WHILE           shift and go to state 150
+    FOR             shift and go to state 151
 
-    stmtlist                       shift and go to state 122
-    empty                          shift and go to state 123
-    stmtprime                      shift and go to state 124
-    stmt                           shift and go to state 125
-    vardecl                        shift and go to state 126
-    matchstmt                      shift and go to state 127
-    unmatchif                      shift and go to state 128
-    blockstmt                      shift and go to state 130
-    callstmt                       shift and go to state 131
-    retstmt                        shift and go to state 132
-    contistmt                      shift and go to state 133
-    breakstmt                      shift and go to state 134
-    dowhilestmt                    shift and go to state 135
-    whilestmt                      shift and go to state 136
-    forstmt                        shift and go to state 137
-    matchif                        shift and go to state 138
-    assigstmt                      shift and go to state 139
+    stmtlist                       shift and go to state 127
+    empty                          shift and go to state 128
+    stmtprime                      shift and go to state 129
+    stmt                           shift and go to state 130
+    vardecl                        shift and go to state 131
+    matchstmt                      shift and go to state 132
+    unmatchif                      shift and go to state 133
+    blockstmt                      shift and go to state 135
+    callstmt                       shift and go to state 136
+    retstmt                        shift and go to state 137
+    contistmt                      shift and go to state 138
+    breakstmt                      shift and go to state 139
+    dowhilestmt                    shift and go to state 140
+    whilestmt                      shift and go to state 141
+    forstmt                        shift and go to state 142
+    matchif                        shift and go to state 143
+    assigstmt                      shift and go to state 144
 
-state 107
+state 111
 
     (31) paramdecl -> LPAREN paramlist . RPAREN
-    RPAREN          shift and go to state 147
+    RPAREN          shift and go to state 152
 
 
-state 108
+state 112
 
     (32) paramlist -> empty .
     RPAREN          reduce using rule 32 (paramlist -> empty .)
 
 
-state 109
+state 113
 
     (33) paramlist -> paramprime .
     RPAREN          reduce using rule 33 (paramlist -> paramprime .)
 
 
-state 110
+state 114
 
     (34) paramprime -> param .
     (35) paramprime -> param . COMMA paramprime
     RPAREN          reduce using rule 34 (paramprime -> param .)
-    COMMA           shift and go to state 148
-
-
-state 111
-
-    (36) param -> OUT . ID COLON typeof
-    ID              shift and go to state 149
-
-
-state 112
-
-    (38) param -> ID . COLON typeof
-    COLON           shift and go to state 150
-
-
-state 113
-
-    (37) param -> INHERIT . ID COLON typeof
-    (39) param -> INHERIT . OUT ID COLON typeof
-    ID              shift and go to state 151
-    OUT             shift and go to state 152
-
-
-state 114
-
-    (22) arrtype -> ARRAY LBRACKET dime RBRACKET . OF atotype
-    OF              shift and go to state 153
+    COMMA           shift and go to state 153
 
 
 state 115
 
+    (36) param -> OUT . ID COLON typeof
+    ID              shift and go to state 154
+
+
+state 116
+
+    (38) param -> ID . COLON typeof
+    COLON           shift and go to state 155
+
+
+state 117
+
+    (37) param -> INHERIT . ID COLON typeof
+    (39) param -> INHERIT . OUT ID COLON typeof
+    ID              shift and go to state 156
+    OUT             shift and go to state 157
+
+
+state 118
+
+    (22) arrtype -> ARRAY LBRACKET dime RBRACKET . OF atotype
+    OF              shift and go to state 158
+
+
+state 119
+
     (24) dime -> INTLIT COMMA . dime
     (23) dime -> . INTLIT
     (24) dime -> . INTLIT COMMA dime
-    INTLIT          shift and go to state 81
+    INTLIT          shift and go to state 84
 
-    dime                           shift and go to state 154
+    dime                           shift and go to state 159
 
-state 116
+state 120
 
     (107) exp7 -> ID LBRACKET expprime RBRACKET .
     MUL             reduce using rule 107 (exp7 -> ID LBRACKET expprime RBRACKET .)
@@ -2962,7 +2951,7 @@ state 116
     RBRACKET        reduce using rule 107 (exp7 -> ID LBRACKET expprime RBRACKET .)
 
 
-state 117
+state 121
 
     (77) funcall -> ID LPAREN explist RPAREN .
     MUL             reduce using rule 77 (funcall -> ID LPAREN explist RPAREN .)
@@ -2986,7 +2975,7 @@ state 117
     RBRACKET        reduce using rule 77 (funcall -> ID LPAREN explist RPAREN .)
 
 
-state 118
+state 122
 
     (82) expprime -> exp0 COMMA expprime .
     RBRACE          reduce using rule 82 (expprime -> exp0 COMMA expprime .)
@@ -2994,79 +2983,85 @@ state 118
     RPAREN          reduce using rule 82 (expprime -> exp0 COMMA expprime .)
 
 
-state 119
+state 123
 
-    (12) subvardecl -> COMMA ID subvardecl exp0 COMMA .
-    NOT             reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    MINUS           reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    ID              reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    STRINGLIT       reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    BOOLEANLIT      reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    FLOATLIT        reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    INTLIT          reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    LPAREN          reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    LBRACE          reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    $end            reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    IF              reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    RETURN          reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    CONTINUE        reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    BREAK           reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    DO              reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    WHILE           reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    FOR             reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
-    RBRACE          reduce using rule 12 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
+    (9) subvardecl -> COLON . typeof ASSIGNMENT
+    (15) typeof -> . arrtype
+    (16) typeof -> . atotype
+    (17) typeof -> . AUTO
+    (22) arrtype -> . ARRAY LBRACKET dime RBRACKET OF atotype
+    (18) atotype -> . STRING
+    (19) atotype -> . FLOAT
+    (20) atotype -> . INTEGER
+    (21) atotype -> . BOOLEAN
+    AUTO            shift and go to state 16
+    ARRAY           shift and go to state 17
+    STRING          shift and go to state 18
+    FLOAT           shift and go to state 19
+    INTEGER         shift and go to state 20
+    BOOLEAN         shift and go to state 21
 
+    typeof                         shift and go to state 160
+    arrtype                        shift and go to state 14
+    atotype                        shift and go to state 15
 
-state 120
+state 124
 
-    (9) subvardecl -> COLON typeof SEMICOLON .
-    NOT             reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    MINUS           reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    ID              reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    STRINGLIT       reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    BOOLEANLIT      reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    FLOATLIT        reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    INTLIT          reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    LPAREN          reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    LBRACE          reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    $end            reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    IF              reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    RETURN          reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    CONTINUE        reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    BREAK           reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    DO              reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    WHILE           reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    FOR             reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
-    RBRACE          reduce using rule 9 (subvardecl -> COLON typeof SEMICOLON .)
+    (10) subvardecl -> COMMA ID subvardecl exp0 COMMA .
+    NOT             reduce using rule 10 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
+    MINUS           reduce using rule 10 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
+    ID              reduce using rule 10 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
+    STRINGLIT       reduce using rule 10 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
+    BOOLEANLIT      reduce using rule 10 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
+    FLOATLIT        reduce using rule 10 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
+    INTLIT          reduce using rule 10 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
+    LPAREN          reduce using rule 10 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
+    LBRACE          reduce using rule 10 (subvardecl -> COMMA ID subvardecl exp0 COMMA .)
 
 
-state 121
+state 125
+
+    (12) subvardecl3 -> COLON typeof SEMICOLON .
+    ID              reduce using rule 12 (subvardecl3 -> COLON typeof SEMICOLON .)
+    $end            reduce using rule 12 (subvardecl3 -> COLON typeof SEMICOLON .)
+    IF              reduce using rule 12 (subvardecl3 -> COLON typeof SEMICOLON .)
+    LBRACE          reduce using rule 12 (subvardecl3 -> COLON typeof SEMICOLON .)
+    RETURN          reduce using rule 12 (subvardecl3 -> COLON typeof SEMICOLON .)
+    CONTINUE        reduce using rule 12 (subvardecl3 -> COLON typeof SEMICOLON .)
+    BREAK           reduce using rule 12 (subvardecl3 -> COLON typeof SEMICOLON .)
+    DO              reduce using rule 12 (subvardecl3 -> COLON typeof SEMICOLON .)
+    WHILE           reduce using rule 12 (subvardecl3 -> COLON typeof SEMICOLON .)
+    FOR             reduce using rule 12 (subvardecl3 -> COLON typeof SEMICOLON .)
+    RBRACE          reduce using rule 12 (subvardecl3 -> COLON typeof SEMICOLON .)
+
+
+state 126
 
     (29) funcdecl -> ID COLON FUNCTION returntype paramdecl INHERIT ID . blockstmt
     (76) blockstmt -> . LBRACE stmtlist RBRACE
-    LBRACE          shift and go to state 106
+    LBRACE          shift and go to state 110
 
-    blockstmt                      shift and go to state 155
+    blockstmt                      shift and go to state 161
 
-state 122
+state 127
 
     (76) blockstmt -> LBRACE stmtlist . RBRACE
-    RBRACE          shift and go to state 156
+    RBRACE          shift and go to state 162
 
 
-state 123
+state 128
 
     (40) stmtlist -> empty .
     RBRACE          reduce using rule 40 (stmtlist -> empty .)
 
 
-state 124
+state 129
 
     (41) stmtlist -> stmtprime .
     RBRACE          reduce using rule 41 (stmtlist -> stmtprime .)
 
 
-state 125
+state 130
 
     (42) stmtprime -> stmt .
     (45) stmtprime -> stmt . stmtlist
@@ -3080,7 +3075,7 @@ state 125
     (46) stmt -> . matchstmt
     (47) stmt -> . unmatchif
     (6) vardecl -> . ID subvardecl exp0 SEMICOLON
-    (7) vardecl -> . ID subvardecl
+    (7) vardecl -> . ID subvardecl2
     (8) vardecl -> . ID COLON typeof SEMICOLON
     (48) matchstmt -> . blockstmt
     (49) matchstmt -> . callstmt
@@ -3108,35 +3103,35 @@ state 125
     (59) assigstmt -> . ID LBRACKET expprime RBRACKET ASSIGNMENT exp0 SEMICOLON
   ! reduce/reduce conflict for RBRACE resolved using rule 42 (stmtprime -> stmt .)
     RBRACE          reduce using rule 42 (stmtprime -> stmt .)
-    ID              shift and go to state 129
-    IF              shift and go to state 140
-    LBRACE          shift and go to state 106
-    RETURN          shift and go to state 141
-    CONTINUE        shift and go to state 142
-    BREAK           shift and go to state 143
-    DO              shift and go to state 144
-    WHILE           shift and go to state 145
-    FOR             shift and go to state 146
+    ID              shift and go to state 134
+    IF              shift and go to state 145
+    LBRACE          shift and go to state 110
+    RETURN          shift and go to state 146
+    CONTINUE        shift and go to state 147
+    BREAK           shift and go to state 148
+    DO              shift and go to state 149
+    WHILE           shift and go to state 150
+    FOR             shift and go to state 151
 
-    stmt                           shift and go to state 125
-    stmtlist                       shift and go to state 157
-    empty                          shift and go to state 123
-    stmtprime                      shift and go to state 124
-    vardecl                        shift and go to state 126
-    matchstmt                      shift and go to state 127
-    unmatchif                      shift and go to state 128
-    blockstmt                      shift and go to state 130
-    callstmt                       shift and go to state 131
-    retstmt                        shift and go to state 132
-    contistmt                      shift and go to state 133
-    breakstmt                      shift and go to state 134
-    dowhilestmt                    shift and go to state 135
-    whilestmt                      shift and go to state 136
-    forstmt                        shift and go to state 137
-    matchif                        shift and go to state 138
-    assigstmt                      shift and go to state 139
+    stmt                           shift and go to state 130
+    stmtlist                       shift and go to state 163
+    empty                          shift and go to state 128
+    stmtprime                      shift and go to state 129
+    vardecl                        shift and go to state 131
+    matchstmt                      shift and go to state 132
+    unmatchif                      shift and go to state 133
+    blockstmt                      shift and go to state 135
+    callstmt                       shift and go to state 136
+    retstmt                        shift and go to state 137
+    contistmt                      shift and go to state 138
+    breakstmt                      shift and go to state 139
+    dowhilestmt                    shift and go to state 140
+    whilestmt                      shift and go to state 141
+    forstmt                        shift and go to state 142
+    matchif                        shift and go to state 143
+    assigstmt                      shift and go to state 144
 
-state 126
+state 131
 
     (43) stmtprime -> vardecl .
     (44) stmtprime -> vardecl . stmtlist
@@ -3150,7 +3145,7 @@ state 126
     (46) stmt -> . matchstmt
     (47) stmt -> . unmatchif
     (6) vardecl -> . ID subvardecl exp0 SEMICOLON
-    (7) vardecl -> . ID subvardecl
+    (7) vardecl -> . ID subvardecl2
     (8) vardecl -> . ID COLON typeof SEMICOLON
     (48) matchstmt -> . blockstmt
     (49) matchstmt -> . callstmt
@@ -3178,35 +3173,35 @@ state 126
     (59) assigstmt -> . ID LBRACKET expprime RBRACKET ASSIGNMENT exp0 SEMICOLON
   ! reduce/reduce conflict for RBRACE resolved using rule 43 (stmtprime -> vardecl .)
     RBRACE          reduce using rule 43 (stmtprime -> vardecl .)
-    ID              shift and go to state 129
-    IF              shift and go to state 140
-    LBRACE          shift and go to state 106
-    RETURN          shift and go to state 141
-    CONTINUE        shift and go to state 142
-    BREAK           shift and go to state 143
-    DO              shift and go to state 144
-    WHILE           shift and go to state 145
-    FOR             shift and go to state 146
+    ID              shift and go to state 134
+    IF              shift and go to state 145
+    LBRACE          shift and go to state 110
+    RETURN          shift and go to state 146
+    CONTINUE        shift and go to state 147
+    BREAK           shift and go to state 148
+    DO              shift and go to state 149
+    WHILE           shift and go to state 150
+    FOR             shift and go to state 151
 
-    vardecl                        shift and go to state 126
-    stmtlist                       shift and go to state 158
-    empty                          shift and go to state 123
-    stmtprime                      shift and go to state 124
-    stmt                           shift and go to state 125
-    matchstmt                      shift and go to state 127
-    unmatchif                      shift and go to state 128
-    blockstmt                      shift and go to state 130
-    callstmt                       shift and go to state 131
-    retstmt                        shift and go to state 132
-    contistmt                      shift and go to state 133
-    breakstmt                      shift and go to state 134
-    dowhilestmt                    shift and go to state 135
-    whilestmt                      shift and go to state 136
-    forstmt                        shift and go to state 137
-    matchif                        shift and go to state 138
-    assigstmt                      shift and go to state 139
+    vardecl                        shift and go to state 131
+    stmtlist                       shift and go to state 164
+    empty                          shift and go to state 128
+    stmtprime                      shift and go to state 129
+    stmt                           shift and go to state 130
+    matchstmt                      shift and go to state 132
+    unmatchif                      shift and go to state 133
+    blockstmt                      shift and go to state 135
+    callstmt                       shift and go to state 136
+    retstmt                        shift and go to state 137
+    contistmt                      shift and go to state 138
+    breakstmt                      shift and go to state 139
+    dowhilestmt                    shift and go to state 140
+    whilestmt                      shift and go to state 141
+    forstmt                        shift and go to state 142
+    matchif                        shift and go to state 143
+    assigstmt                      shift and go to state 144
 
-state 127
+state 132
 
     (46) stmt -> matchstmt .
     ID              reduce using rule 46 (stmt -> matchstmt .)
@@ -3222,7 +3217,7 @@ state 127
     ELSE            reduce using rule 46 (stmt -> matchstmt .)
 
 
-state 128
+state 133
 
     (47) stmt -> unmatchif .
     ID              reduce using rule 47 (stmt -> unmatchif .)
@@ -3238,27 +3233,27 @@ state 128
     ELSE            reduce using rule 47 (stmt -> unmatchif .)
 
 
-state 129
+state 134
 
     (6) vardecl -> ID . subvardecl exp0 SEMICOLON
-    (7) vardecl -> ID . subvardecl
+    (7) vardecl -> ID . subvardecl2
     (8) vardecl -> ID . COLON typeof SEMICOLON
     (75) callstmt -> ID . LPAREN explist RPAREN SEMICOLON
     (58) assigstmt -> ID . ASSIGNMENT exp0 SEMICOLON
     (59) assigstmt -> ID . LBRACKET expprime RBRACKET ASSIGNMENT exp0 SEMICOLON
-    (9) subvardecl -> . COLON typeof SEMICOLON
-    (10) subvardecl -> . COMMA ID subvardecl
-    (11) subvardecl -> . COLON typeof ASSIGNMENT
-    (12) subvardecl -> . COMMA ID subvardecl exp0 COMMA
-    COLON           shift and go to state 159
-    LPAREN          shift and go to state 160
-    ASSIGNMENT      shift and go to state 161
-    LBRACKET        shift and go to state 162
-    COMMA           shift and go to state 10
+    (9) subvardecl -> . COLON typeof ASSIGNMENT
+    (10) subvardecl -> . COMMA ID subvardecl exp0 COMMA
+    (11) subvardecl2 -> . COMMA ID subvardecl3
+    COLON           shift and go to state 165
+    LPAREN          shift and go to state 166
+    ASSIGNMENT      shift and go to state 167
+    LBRACKET        shift and go to state 168
+    COMMA           shift and go to state 11
 
     subvardecl                     shift and go to state 9
+    subvardecl2                    shift and go to state 10
 
-state 130
+state 135
 
     (48) matchstmt -> blockstmt .
     ID              reduce using rule 48 (matchstmt -> blockstmt .)
@@ -3274,7 +3269,7 @@ state 130
     ELSE            reduce using rule 48 (matchstmt -> blockstmt .)
 
 
-state 131
+state 136
 
     (49) matchstmt -> callstmt .
     ID              reduce using rule 49 (matchstmt -> callstmt .)
@@ -3290,7 +3285,7 @@ state 131
     ELSE            reduce using rule 49 (matchstmt -> callstmt .)
 
 
-state 132
+state 137
 
     (50) matchstmt -> retstmt .
     ID              reduce using rule 50 (matchstmt -> retstmt .)
@@ -3306,7 +3301,7 @@ state 132
     ELSE            reduce using rule 50 (matchstmt -> retstmt .)
 
 
-state 133
+state 138
 
     (51) matchstmt -> contistmt .
     ID              reduce using rule 51 (matchstmt -> contistmt .)
@@ -3322,7 +3317,7 @@ state 133
     ELSE            reduce using rule 51 (matchstmt -> contistmt .)
 
 
-state 134
+state 139
 
     (52) matchstmt -> breakstmt .
     ID              reduce using rule 52 (matchstmt -> breakstmt .)
@@ -3338,7 +3333,7 @@ state 134
     ELSE            reduce using rule 52 (matchstmt -> breakstmt .)
 
 
-state 135
+state 140
 
     (53) matchstmt -> dowhilestmt .
     ID              reduce using rule 53 (matchstmt -> dowhilestmt .)
@@ -3354,7 +3349,7 @@ state 135
     ELSE            reduce using rule 53 (matchstmt -> dowhilestmt .)
 
 
-state 136
+state 141
 
     (54) matchstmt -> whilestmt .
     ID              reduce using rule 54 (matchstmt -> whilestmt .)
@@ -3370,7 +3365,7 @@ state 136
     ELSE            reduce using rule 54 (matchstmt -> whilestmt .)
 
 
-state 137
+state 142
 
     (55) matchstmt -> forstmt .
     ID              reduce using rule 55 (matchstmt -> forstmt .)
@@ -3386,7 +3381,7 @@ state 137
     ELSE            reduce using rule 55 (matchstmt -> forstmt .)
 
 
-state 138
+state 143
 
     (56) matchstmt -> matchif .
     ID              reduce using rule 56 (matchstmt -> matchif .)
@@ -3402,7 +3397,7 @@ state 138
     ELSE            reduce using rule 56 (matchstmt -> matchif .)
 
 
-state 139
+state 144
 
     (57) matchstmt -> assigstmt .
     ID              reduce using rule 57 (matchstmt -> assigstmt .)
@@ -3418,15 +3413,15 @@ state 139
     ELSE            reduce using rule 57 (matchstmt -> assigstmt .)
 
 
-state 140
+state 145
 
     (61) unmatchif -> IF . LPAREN exp0 RPAREN stmt
     (62) unmatchif -> IF . LPAREN exp0 RPAREN matchstmt ELSE unmatchif
     (60) matchif -> IF . LPAREN exp0 RPAREN matchstmt ELSE matchstmt
-    LPAREN          shift and go to state 163
+    LPAREN          shift and go to state 169
 
 
-state 141
+state 146
 
     (73) retstmt -> RETURN . SEMICOLON
     (74) retstmt -> RETURN . exp0 SEMICOLON
@@ -3467,73 +3462,73 @@ state 141
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    SEMICOLON       shift and go to state 164
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    SEMICOLON       shift and go to state 170
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp0                           shift and go to state 165
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp0                           shift and go to state 171
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 142
+state 147
 
     (72) contistmt -> CONTINUE . SEMICOLON
-    SEMICOLON       shift and go to state 166
+    SEMICOLON       shift and go to state 172
 
 
-state 143
+state 148
 
     (71) breakstmt -> BREAK . SEMICOLON
-    SEMICOLON       shift and go to state 167
+    SEMICOLON       shift and go to state 173
 
 
-state 144
+state 149
 
     (70) dowhilestmt -> DO . blockstmt WHILE LPAREN exp0 RPAREN SEMICOLON
     (76) blockstmt -> . LBRACE stmtlist RBRACE
-    LBRACE          shift and go to state 106
+    LBRACE          shift and go to state 110
 
-    blockstmt                      shift and go to state 168
+    blockstmt                      shift and go to state 174
 
-state 145
+state 150
 
     (68) whilestmt -> WHILE . whilecondi stmt
     (69) whilecondi -> . LPAREN exp0 RPAREN
-    LPAREN          shift and go to state 170
+    LPAREN          shift and go to state 176
 
-    whilecondi                     shift and go to state 169
+    whilecondi                     shift and go to state 175
 
-state 146
+state 151
 
     (63) forstmt -> FOR . LPAREN scaladecl COMMA condifor COMMA updatefor RPAREN stmt
-    LPAREN          shift and go to state 171
+    LPAREN          shift and go to state 177
 
 
-state 147
+state 152
 
     (31) paramdecl -> LPAREN paramlist RPAREN .
     INHERIT         reduce using rule 31 (paramdecl -> LPAREN paramlist RPAREN .)
     LBRACE          reduce using rule 31 (paramdecl -> LPAREN paramlist RPAREN .)
 
 
-state 148
+state 153
 
     (35) paramprime -> param COMMA . paramprime
     (34) paramprime -> . param
@@ -3542,20 +3537,20 @@ state 148
     (37) param -> . INHERIT ID COLON typeof
     (38) param -> . ID COLON typeof
     (39) param -> . INHERIT OUT ID COLON typeof
-    OUT             shift and go to state 111
-    INHERIT         shift and go to state 113
-    ID              shift and go to state 112
+    OUT             shift and go to state 115
+    INHERIT         shift and go to state 117
+    ID              shift and go to state 116
 
-    param                          shift and go to state 110
-    paramprime                     shift and go to state 172
+    param                          shift and go to state 114
+    paramprime                     shift and go to state 178
 
-state 149
+state 154
 
     (36) param -> OUT ID . COLON typeof
-    COLON           shift and go to state 173
+    COLON           shift and go to state 179
 
 
-state 150
+state 155
 
     (38) param -> ID COLON . typeof
     (15) typeof -> . arrtype
@@ -3566,57 +3561,63 @@ state 150
     (19) atotype -> . FLOAT
     (20) atotype -> . INTEGER
     (21) atotype -> . BOOLEAN
-    AUTO            shift and go to state 15
-    ARRAY           shift and go to state 16
-    STRING          shift and go to state 17
-    FLOAT           shift and go to state 18
-    INTEGER         shift and go to state 19
-    BOOLEAN         shift and go to state 20
+    AUTO            shift and go to state 16
+    ARRAY           shift and go to state 17
+    STRING          shift and go to state 18
+    FLOAT           shift and go to state 19
+    INTEGER         shift and go to state 20
+    BOOLEAN         shift and go to state 21
 
-    typeof                         shift and go to state 174
-    arrtype                        shift and go to state 13
-    atotype                        shift and go to state 14
+    typeof                         shift and go to state 180
+    arrtype                        shift and go to state 14
+    atotype                        shift and go to state 15
 
-state 151
+state 156
 
     (37) param -> INHERIT ID . COLON typeof
-    COLON           shift and go to state 175
+    COLON           shift and go to state 181
 
 
-state 152
+state 157
 
     (39) param -> INHERIT OUT . ID COLON typeof
-    ID              shift and go to state 176
+    ID              shift and go to state 182
 
 
-state 153
+state 158
 
     (22) arrtype -> ARRAY LBRACKET dime RBRACKET OF . atotype
     (18) atotype -> . STRING
     (19) atotype -> . FLOAT
     (20) atotype -> . INTEGER
     (21) atotype -> . BOOLEAN
-    STRING          shift and go to state 17
-    FLOAT           shift and go to state 18
-    INTEGER         shift and go to state 19
-    BOOLEAN         shift and go to state 20
+    STRING          shift and go to state 18
+    FLOAT           shift and go to state 19
+    INTEGER         shift and go to state 20
+    BOOLEAN         shift and go to state 21
 
-    atotype                        shift and go to state 177
+    atotype                        shift and go to state 183
 
-state 154
+state 159
 
     (24) dime -> INTLIT COMMA dime .
     RBRACKET        reduce using rule 24 (dime -> INTLIT COMMA dime .)
 
 
-state 155
+state 160
+
+    (9) subvardecl -> COLON typeof . ASSIGNMENT
+    ASSIGNMENT      shift and go to state 51
+
+
+state 161
 
     (29) funcdecl -> ID COLON FUNCTION returntype paramdecl INHERIT ID blockstmt .
     ID              reduce using rule 29 (funcdecl -> ID COLON FUNCTION returntype paramdecl INHERIT ID blockstmt .)
     $end            reduce using rule 29 (funcdecl -> ID COLON FUNCTION returntype paramdecl INHERIT ID blockstmt .)
 
 
-state 156
+state 162
 
     (76) blockstmt -> LBRACE stmtlist RBRACE .
     ID              reduce using rule 76 (blockstmt -> LBRACE stmtlist RBRACE .)
@@ -3633,23 +3634,22 @@ state 156
     ELSE            reduce using rule 76 (blockstmt -> LBRACE stmtlist RBRACE .)
 
 
-state 157
+state 163
 
     (45) stmtprime -> stmt stmtlist .
     RBRACE          reduce using rule 45 (stmtprime -> stmt stmtlist .)
 
 
-state 158
+state 164
 
     (44) stmtprime -> vardecl stmtlist .
     RBRACE          reduce using rule 44 (stmtprime -> vardecl stmtlist .)
 
 
-state 159
+state 165
 
     (8) vardecl -> ID COLON . typeof SEMICOLON
-    (9) subvardecl -> COLON . typeof SEMICOLON
-    (11) subvardecl -> COLON . typeof ASSIGNMENT
+    (9) subvardecl -> COLON . typeof ASSIGNMENT
     (15) typeof -> . arrtype
     (16) typeof -> . atotype
     (17) typeof -> . AUTO
@@ -3658,18 +3658,18 @@ state 159
     (19) atotype -> . FLOAT
     (20) atotype -> . INTEGER
     (21) atotype -> . BOOLEAN
-    AUTO            shift and go to state 15
-    ARRAY           shift and go to state 16
-    STRING          shift and go to state 17
-    FLOAT           shift and go to state 18
-    INTEGER         shift and go to state 19
-    BOOLEAN         shift and go to state 20
+    AUTO            shift and go to state 16
+    ARRAY           shift and go to state 17
+    STRING          shift and go to state 18
+    FLOAT           shift and go to state 19
+    INTEGER         shift and go to state 20
+    BOOLEAN         shift and go to state 21
 
-    typeof                         shift and go to state 12
-    arrtype                        shift and go to state 13
-    atotype                        shift and go to state 14
+    typeof                         shift and go to state 13
+    arrtype                        shift and go to state 14
+    atotype                        shift and go to state 15
 
-state 160
+state 166
 
     (75) callstmt -> ID LPAREN . explist RPAREN SEMICOLON
     (79) explist -> . empty
@@ -3715,34 +3715,34 @@ state 160
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
     RPAREN          reduce using rule 118 (empty -> .)
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    explist                        shift and go to state 178
-    empty                          shift and go to state 73
-    expprime                       shift and go to state 74
-    exp0                           shift and go to state 75
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    explist                        shift and go to state 184
+    empty                          shift and go to state 74
+    expprime                       shift and go to state 75
+    exp0                           shift and go to state 76
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 161
+state 167
 
     (58) assigstmt -> ID ASSIGNMENT . exp0 SEMICOLON
     (91) exp0 -> . exp1
@@ -3782,31 +3782,31 @@ state 161
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp0                           shift and go to state 179
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp0                           shift and go to state 185
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 162
+state 168
 
     (59) assigstmt -> ID LBRACKET . expprime RBRACKET ASSIGNMENT exp0 SEMICOLON
     (81) expprime -> . exp0
@@ -3848,32 +3848,32 @@ state 162
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    expprime                       shift and go to state 180
-    exp0                           shift and go to state 75
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    expprime                       shift and go to state 186
+    exp0                           shift and go to state 76
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 163
+state 169
 
     (61) unmatchif -> IF LPAREN . exp0 RPAREN stmt
     (62) unmatchif -> IF LPAREN . exp0 RPAREN matchstmt ELSE unmatchif
@@ -3915,31 +3915,31 @@ state 163
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp0                           shift and go to state 181
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp0                           shift and go to state 187
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 164
+state 170
 
     (73) retstmt -> RETURN SEMICOLON .
     ID              reduce using rule 73 (retstmt -> RETURN SEMICOLON .)
@@ -3955,13 +3955,13 @@ state 164
     ELSE            reduce using rule 73 (retstmt -> RETURN SEMICOLON .)
 
 
-state 165
+state 171
 
     (74) retstmt -> RETURN exp0 . SEMICOLON
-    SEMICOLON       shift and go to state 182
+    SEMICOLON       shift and go to state 188
 
 
-state 166
+state 172
 
     (72) contistmt -> CONTINUE SEMICOLON .
     ID              reduce using rule 72 (contistmt -> CONTINUE SEMICOLON .)
@@ -3977,7 +3977,7 @@ state 166
     ELSE            reduce using rule 72 (contistmt -> CONTINUE SEMICOLON .)
 
 
-state 167
+state 173
 
     (71) breakstmt -> BREAK SEMICOLON .
     ID              reduce using rule 71 (breakstmt -> BREAK SEMICOLON .)
@@ -3993,13 +3993,13 @@ state 167
     ELSE            reduce using rule 71 (breakstmt -> BREAK SEMICOLON .)
 
 
-state 168
+state 174
 
     (70) dowhilestmt -> DO blockstmt . WHILE LPAREN exp0 RPAREN SEMICOLON
-    WHILE           shift and go to state 183
+    WHILE           shift and go to state 189
 
 
-state 169
+state 175
 
     (68) whilestmt -> WHILE whilecondi . stmt
     (46) stmt -> . matchstmt
@@ -4028,31 +4028,31 @@ state 169
     (60) matchif -> . IF LPAREN exp0 RPAREN matchstmt ELSE matchstmt
     (58) assigstmt -> . ID ASSIGNMENT exp0 SEMICOLON
     (59) assigstmt -> . ID LBRACKET expprime RBRACKET ASSIGNMENT exp0 SEMICOLON
-    IF              shift and go to state 140
-    LBRACE          shift and go to state 106
-    ID              shift and go to state 185
-    RETURN          shift and go to state 141
-    CONTINUE        shift and go to state 142
-    BREAK           shift and go to state 143
-    DO              shift and go to state 144
-    WHILE           shift and go to state 145
-    FOR             shift and go to state 146
+    IF              shift and go to state 145
+    LBRACE          shift and go to state 110
+    ID              shift and go to state 191
+    RETURN          shift and go to state 146
+    CONTINUE        shift and go to state 147
+    BREAK           shift and go to state 148
+    DO              shift and go to state 149
+    WHILE           shift and go to state 150
+    FOR             shift and go to state 151
 
-    stmt                           shift and go to state 184
-    matchstmt                      shift and go to state 127
-    unmatchif                      shift and go to state 128
-    blockstmt                      shift and go to state 130
-    callstmt                       shift and go to state 131
-    retstmt                        shift and go to state 132
-    contistmt                      shift and go to state 133
-    breakstmt                      shift and go to state 134
-    dowhilestmt                    shift and go to state 135
-    whilestmt                      shift and go to state 136
-    forstmt                        shift and go to state 137
-    matchif                        shift and go to state 138
-    assigstmt                      shift and go to state 139
+    stmt                           shift and go to state 190
+    matchstmt                      shift and go to state 132
+    unmatchif                      shift and go to state 133
+    blockstmt                      shift and go to state 135
+    callstmt                       shift and go to state 136
+    retstmt                        shift and go to state 137
+    contistmt                      shift and go to state 138
+    breakstmt                      shift and go to state 139
+    dowhilestmt                    shift and go to state 140
+    whilestmt                      shift and go to state 141
+    forstmt                        shift and go to state 142
+    matchif                        shift and go to state 143
+    assigstmt                      shift and go to state 144
 
-state 170
+state 176
 
     (69) whilecondi -> LPAREN . exp0 RPAREN
     (91) exp0 -> . exp1
@@ -4092,47 +4092,47 @@ state 170
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp0                           shift and go to state 186
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp0                           shift and go to state 192
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 171
+state 177
 
     (63) forstmt -> FOR LPAREN . scaladecl COMMA condifor COMMA updatefor RPAREN stmt
     (64) scaladecl -> . scalavar ASSIGNMENT exp0
     (65) scalavar -> . ID
-    ID              shift and go to state 189
+    ID              shift and go to state 195
 
-    scaladecl                      shift and go to state 187
-    scalavar                       shift and go to state 188
+    scaladecl                      shift and go to state 193
+    scalavar                       shift and go to state 194
 
-state 172
+state 178
 
     (35) paramprime -> param COMMA paramprime .
     RPAREN          reduce using rule 35 (paramprime -> param COMMA paramprime .)
 
 
-state 173
+state 179
 
     (36) param -> OUT ID COLON . typeof
     (15) typeof -> . arrtype
@@ -4143,25 +4143,25 @@ state 173
     (19) atotype -> . FLOAT
     (20) atotype -> . INTEGER
     (21) atotype -> . BOOLEAN
-    AUTO            shift and go to state 15
-    ARRAY           shift and go to state 16
-    STRING          shift and go to state 17
-    FLOAT           shift and go to state 18
-    INTEGER         shift and go to state 19
-    BOOLEAN         shift and go to state 20
+    AUTO            shift and go to state 16
+    ARRAY           shift and go to state 17
+    STRING          shift and go to state 18
+    FLOAT           shift and go to state 19
+    INTEGER         shift and go to state 20
+    BOOLEAN         shift and go to state 21
 
-    typeof                         shift and go to state 190
-    arrtype                        shift and go to state 13
-    atotype                        shift and go to state 14
+    typeof                         shift and go to state 196
+    arrtype                        shift and go to state 14
+    atotype                        shift and go to state 15
 
-state 174
+state 180
 
     (38) param -> ID COLON typeof .
     COMMA           reduce using rule 38 (param -> ID COLON typeof .)
     RPAREN          reduce using rule 38 (param -> ID COLON typeof .)
 
 
-state 175
+state 181
 
     (37) param -> INHERIT ID COLON . typeof
     (15) typeof -> . arrtype
@@ -4172,24 +4172,24 @@ state 175
     (19) atotype -> . FLOAT
     (20) atotype -> . INTEGER
     (21) atotype -> . BOOLEAN
-    AUTO            shift and go to state 15
-    ARRAY           shift and go to state 16
-    STRING          shift and go to state 17
-    FLOAT           shift and go to state 18
-    INTEGER         shift and go to state 19
-    BOOLEAN         shift and go to state 20
+    AUTO            shift and go to state 16
+    ARRAY           shift and go to state 17
+    STRING          shift and go to state 18
+    FLOAT           shift and go to state 19
+    INTEGER         shift and go to state 20
+    BOOLEAN         shift and go to state 21
 
-    typeof                         shift and go to state 191
-    arrtype                        shift and go to state 13
-    atotype                        shift and go to state 14
+    typeof                         shift and go to state 197
+    arrtype                        shift and go to state 14
+    atotype                        shift and go to state 15
 
-state 176
+state 182
 
     (39) param -> INHERIT OUT ID . COLON typeof
-    COLON           shift and go to state 192
+    COLON           shift and go to state 198
 
 
-state 177
+state 183
 
     (22) arrtype -> ARRAY LBRACKET dime RBRACKET OF atotype .
     SEMICOLON       reduce using rule 22 (arrtype -> ARRAY LBRACKET dime RBRACKET OF atotype .)
@@ -4199,33 +4199,33 @@ state 177
     RPAREN          reduce using rule 22 (arrtype -> ARRAY LBRACKET dime RBRACKET OF atotype .)
 
 
-state 178
+state 184
 
     (75) callstmt -> ID LPAREN explist . RPAREN SEMICOLON
-    RPAREN          shift and go to state 193
+    RPAREN          shift and go to state 199
 
 
-state 179
+state 185
 
     (58) assigstmt -> ID ASSIGNMENT exp0 . SEMICOLON
-    SEMICOLON       shift and go to state 194
+    SEMICOLON       shift and go to state 200
 
 
-state 180
+state 186
 
     (59) assigstmt -> ID LBRACKET expprime . RBRACKET ASSIGNMENT exp0 SEMICOLON
-    RBRACKET        shift and go to state 195
+    RBRACKET        shift and go to state 201
 
 
-state 181
+state 187
 
     (61) unmatchif -> IF LPAREN exp0 . RPAREN stmt
     (62) unmatchif -> IF LPAREN exp0 . RPAREN matchstmt ELSE unmatchif
     (60) matchif -> IF LPAREN exp0 . RPAREN matchstmt ELSE matchstmt
-    RPAREN          shift and go to state 196
+    RPAREN          shift and go to state 202
 
 
-state 182
+state 188
 
     (74) retstmt -> RETURN exp0 SEMICOLON .
     ID              reduce using rule 74 (retstmt -> RETURN exp0 SEMICOLON .)
@@ -4241,13 +4241,13 @@ state 182
     ELSE            reduce using rule 74 (retstmt -> RETURN exp0 SEMICOLON .)
 
 
-state 183
+state 189
 
     (70) dowhilestmt -> DO blockstmt WHILE . LPAREN exp0 RPAREN SEMICOLON
-    LPAREN          shift and go to state 197
+    LPAREN          shift and go to state 203
 
 
-state 184
+state 190
 
     (68) whilestmt -> WHILE whilecondi stmt .
     ID              reduce using rule 68 (whilestmt -> WHILE whilecondi stmt .)
@@ -4263,55 +4263,55 @@ state 184
     ELSE            reduce using rule 68 (whilestmt -> WHILE whilecondi stmt .)
 
 
-state 185
+state 191
 
     (75) callstmt -> ID . LPAREN explist RPAREN SEMICOLON
     (58) assigstmt -> ID . ASSIGNMENT exp0 SEMICOLON
     (59) assigstmt -> ID . LBRACKET expprime RBRACKET ASSIGNMENT exp0 SEMICOLON
-    LPAREN          shift and go to state 160
-    ASSIGNMENT      shift and go to state 161
-    LBRACKET        shift and go to state 162
+    LPAREN          shift and go to state 166
+    ASSIGNMENT      shift and go to state 167
+    LBRACKET        shift and go to state 168
 
 
-state 186
+state 192
 
     (69) whilecondi -> LPAREN exp0 . RPAREN
-    RPAREN          shift and go to state 198
+    RPAREN          shift and go to state 204
 
 
-state 187
+state 193
 
     (63) forstmt -> FOR LPAREN scaladecl . COMMA condifor COMMA updatefor RPAREN stmt
-    COMMA           shift and go to state 199
+    COMMA           shift and go to state 205
 
 
-state 188
+state 194
 
     (64) scaladecl -> scalavar . ASSIGNMENT exp0
-    ASSIGNMENT      shift and go to state 200
+    ASSIGNMENT      shift and go to state 206
 
 
-state 189
+state 195
 
     (65) scalavar -> ID .
     ASSIGNMENT      reduce using rule 65 (scalavar -> ID .)
 
 
-state 190
+state 196
 
     (36) param -> OUT ID COLON typeof .
     COMMA           reduce using rule 36 (param -> OUT ID COLON typeof .)
     RPAREN          reduce using rule 36 (param -> OUT ID COLON typeof .)
 
 
-state 191
+state 197
 
     (37) param -> INHERIT ID COLON typeof .
     COMMA           reduce using rule 37 (param -> INHERIT ID COLON typeof .)
     RPAREN          reduce using rule 37 (param -> INHERIT ID COLON typeof .)
 
 
-state 192
+state 198
 
     (39) param -> INHERIT OUT ID COLON . typeof
     (15) typeof -> . arrtype
@@ -4322,24 +4322,24 @@ state 192
     (19) atotype -> . FLOAT
     (20) atotype -> . INTEGER
     (21) atotype -> . BOOLEAN
-    AUTO            shift and go to state 15
-    ARRAY           shift and go to state 16
-    STRING          shift and go to state 17
-    FLOAT           shift and go to state 18
-    INTEGER         shift and go to state 19
-    BOOLEAN         shift and go to state 20
+    AUTO            shift and go to state 16
+    ARRAY           shift and go to state 17
+    STRING          shift and go to state 18
+    FLOAT           shift and go to state 19
+    INTEGER         shift and go to state 20
+    BOOLEAN         shift and go to state 21
 
-    typeof                         shift and go to state 201
-    arrtype                        shift and go to state 13
-    atotype                        shift and go to state 14
+    typeof                         shift and go to state 207
+    arrtype                        shift and go to state 14
+    atotype                        shift and go to state 15
 
-state 193
+state 199
 
     (75) callstmt -> ID LPAREN explist RPAREN . SEMICOLON
-    SEMICOLON       shift and go to state 202
+    SEMICOLON       shift and go to state 208
 
 
-state 194
+state 200
 
     (58) assigstmt -> ID ASSIGNMENT exp0 SEMICOLON .
     ID              reduce using rule 58 (assigstmt -> ID ASSIGNMENT exp0 SEMICOLON .)
@@ -4355,13 +4355,13 @@ state 194
     ELSE            reduce using rule 58 (assigstmt -> ID ASSIGNMENT exp0 SEMICOLON .)
 
 
-state 195
+state 201
 
     (59) assigstmt -> ID LBRACKET expprime RBRACKET . ASSIGNMENT exp0 SEMICOLON
-    ASSIGNMENT      shift and go to state 203
+    ASSIGNMENT      shift and go to state 209
 
 
-state 196
+state 202
 
     (61) unmatchif -> IF LPAREN exp0 RPAREN . stmt
     (62) unmatchif -> IF LPAREN exp0 RPAREN . matchstmt ELSE unmatchif
@@ -4392,31 +4392,31 @@ state 196
     (60) matchif -> . IF LPAREN exp0 RPAREN matchstmt ELSE matchstmt
     (58) assigstmt -> . ID ASSIGNMENT exp0 SEMICOLON
     (59) assigstmt -> . ID LBRACKET expprime RBRACKET ASSIGNMENT exp0 SEMICOLON
-    IF              shift and go to state 140
-    LBRACE          shift and go to state 106
-    ID              shift and go to state 185
-    RETURN          shift and go to state 141
-    CONTINUE        shift and go to state 142
-    BREAK           shift and go to state 143
-    DO              shift and go to state 144
-    WHILE           shift and go to state 145
-    FOR             shift and go to state 146
+    IF              shift and go to state 145
+    LBRACE          shift and go to state 110
+    ID              shift and go to state 191
+    RETURN          shift and go to state 146
+    CONTINUE        shift and go to state 147
+    BREAK           shift and go to state 148
+    DO              shift and go to state 149
+    WHILE           shift and go to state 150
+    FOR             shift and go to state 151
 
-    stmt                           shift and go to state 204
-    matchstmt                      shift and go to state 205
-    unmatchif                      shift and go to state 128
-    blockstmt                      shift and go to state 130
-    callstmt                       shift and go to state 131
-    retstmt                        shift and go to state 132
-    contistmt                      shift and go to state 133
-    breakstmt                      shift and go to state 134
-    dowhilestmt                    shift and go to state 135
-    whilestmt                      shift and go to state 136
-    forstmt                        shift and go to state 137
-    matchif                        shift and go to state 138
-    assigstmt                      shift and go to state 139
+    stmt                           shift and go to state 210
+    matchstmt                      shift and go to state 211
+    unmatchif                      shift and go to state 133
+    blockstmt                      shift and go to state 135
+    callstmt                       shift and go to state 136
+    retstmt                        shift and go to state 137
+    contistmt                      shift and go to state 138
+    breakstmt                      shift and go to state 139
+    dowhilestmt                    shift and go to state 140
+    whilestmt                      shift and go to state 141
+    forstmt                        shift and go to state 142
+    matchif                        shift and go to state 143
+    assigstmt                      shift and go to state 144
 
-state 197
+state 203
 
     (70) dowhilestmt -> DO blockstmt WHILE LPAREN . exp0 RPAREN SEMICOLON
     (91) exp0 -> . exp1
@@ -4456,31 +4456,31 @@ state 197
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp0                           shift and go to state 206
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp0                           shift and go to state 212
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 198
+state 204
 
     (69) whilecondi -> LPAREN exp0 RPAREN .
     IF              reduce using rule 69 (whilecondi -> LPAREN exp0 RPAREN .)
@@ -4494,7 +4494,7 @@ state 198
     FOR             reduce using rule 69 (whilecondi -> LPAREN exp0 RPAREN .)
 
 
-state 199
+state 205
 
     (63) forstmt -> FOR LPAREN scaladecl COMMA . condifor COMMA updatefor RPAREN stmt
     (66) condifor -> . exp0
@@ -4535,32 +4535,32 @@ state 199
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    condifor                       shift and go to state 207
-    exp0                           shift and go to state 208
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    condifor                       shift and go to state 213
+    exp0                           shift and go to state 214
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 200
+state 206
 
     (64) scaladecl -> scalavar ASSIGNMENT . exp0
     (91) exp0 -> . exp1
@@ -4600,38 +4600,38 @@ state 200
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp0                           shift and go to state 209
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp0                           shift and go to state 215
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 201
+state 207
 
     (39) param -> INHERIT OUT ID COLON typeof .
     COMMA           reduce using rule 39 (param -> INHERIT OUT ID COLON typeof .)
     RPAREN          reduce using rule 39 (param -> INHERIT OUT ID COLON typeof .)
 
 
-state 202
+state 208
 
     (75) callstmt -> ID LPAREN explist RPAREN SEMICOLON .
     ID              reduce using rule 75 (callstmt -> ID LPAREN explist RPAREN SEMICOLON .)
@@ -4647,7 +4647,7 @@ state 202
     ELSE            reduce using rule 75 (callstmt -> ID LPAREN explist RPAREN SEMICOLON .)
 
 
-state 203
+state 209
 
     (59) assigstmt -> ID LBRACKET expprime RBRACKET ASSIGNMENT . exp0 SEMICOLON
     (91) exp0 -> . exp1
@@ -4687,31 +4687,31 @@ state 203
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    exp0                           shift and go to state 210
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    exp0                           shift and go to state 216
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 204
+state 210
 
     (61) unmatchif -> IF LPAREN exp0 RPAREN stmt .
     ID              reduce using rule 61 (unmatchif -> IF LPAREN exp0 RPAREN stmt .)
@@ -4727,13 +4727,13 @@ state 204
     ELSE            reduce using rule 61 (unmatchif -> IF LPAREN exp0 RPAREN stmt .)
 
 
-state 205
+state 211
 
     (62) unmatchif -> IF LPAREN exp0 RPAREN matchstmt . ELSE unmatchif
     (60) matchif -> IF LPAREN exp0 RPAREN matchstmt . ELSE matchstmt
     (46) stmt -> matchstmt .
   ! shift/reduce conflict for ELSE resolved as shift
-    ELSE            shift and go to state 211
+    ELSE            shift and go to state 217
     ID              reduce using rule 46 (stmt -> matchstmt .)
     IF              reduce using rule 46 (stmt -> matchstmt .)
     LBRACE          reduce using rule 46 (stmt -> matchstmt .)
@@ -4746,37 +4746,37 @@ state 205
     RBRACE          reduce using rule 46 (stmt -> matchstmt .)
 
 
-state 206
+state 212
 
     (70) dowhilestmt -> DO blockstmt WHILE LPAREN exp0 . RPAREN SEMICOLON
-    RPAREN          shift and go to state 212
+    RPAREN          shift and go to state 218
 
 
-state 207
+state 213
 
     (63) forstmt -> FOR LPAREN scaladecl COMMA condifor . COMMA updatefor RPAREN stmt
-    COMMA           shift and go to state 213
+    COMMA           shift and go to state 219
 
 
-state 208
+state 214
 
     (66) condifor -> exp0 .
     COMMA           reduce using rule 66 (condifor -> exp0 .)
 
 
-state 209
+state 215
 
     (64) scaladecl -> scalavar ASSIGNMENT exp0 .
     COMMA           reduce using rule 64 (scaladecl -> scalavar ASSIGNMENT exp0 .)
 
 
-state 210
+state 216
 
     (59) assigstmt -> ID LBRACKET expprime RBRACKET ASSIGNMENT exp0 . SEMICOLON
-    SEMICOLON       shift and go to state 214
+    SEMICOLON       shift and go to state 220
 
 
-state 211
+state 217
 
     (62) unmatchif -> IF LPAREN exp0 RPAREN matchstmt ELSE . unmatchif
     (60) matchif -> IF LPAREN exp0 RPAREN matchstmt ELSE . matchstmt
@@ -4804,36 +4804,36 @@ state 211
     (60) matchif -> . IF LPAREN exp0 RPAREN matchstmt ELSE matchstmt
     (58) assigstmt -> . ID ASSIGNMENT exp0 SEMICOLON
     (59) assigstmt -> . ID LBRACKET expprime RBRACKET ASSIGNMENT exp0 SEMICOLON
-    IF              shift and go to state 140
-    LBRACE          shift and go to state 106
-    ID              shift and go to state 185
-    RETURN          shift and go to state 141
-    CONTINUE        shift and go to state 142
-    BREAK           shift and go to state 143
-    DO              shift and go to state 144
-    WHILE           shift and go to state 145
-    FOR             shift and go to state 146
+    IF              shift and go to state 145
+    LBRACE          shift and go to state 110
+    ID              shift and go to state 191
+    RETURN          shift and go to state 146
+    CONTINUE        shift and go to state 147
+    BREAK           shift and go to state 148
+    DO              shift and go to state 149
+    WHILE           shift and go to state 150
+    FOR             shift and go to state 151
 
-    matchstmt                      shift and go to state 215
-    unmatchif                      shift and go to state 216
-    blockstmt                      shift and go to state 130
-    callstmt                       shift and go to state 131
-    retstmt                        shift and go to state 132
-    contistmt                      shift and go to state 133
-    breakstmt                      shift and go to state 134
-    dowhilestmt                    shift and go to state 135
-    whilestmt                      shift and go to state 136
-    forstmt                        shift and go to state 137
-    matchif                        shift and go to state 138
-    assigstmt                      shift and go to state 139
+    matchstmt                      shift and go to state 221
+    unmatchif                      shift and go to state 222
+    blockstmt                      shift and go to state 135
+    callstmt                       shift and go to state 136
+    retstmt                        shift and go to state 137
+    contistmt                      shift and go to state 138
+    breakstmt                      shift and go to state 139
+    dowhilestmt                    shift and go to state 140
+    whilestmt                      shift and go to state 141
+    forstmt                        shift and go to state 142
+    matchif                        shift and go to state 143
+    assigstmt                      shift and go to state 144
 
-state 212
+state 218
 
     (70) dowhilestmt -> DO blockstmt WHILE LPAREN exp0 RPAREN . SEMICOLON
-    SEMICOLON       shift and go to state 217
+    SEMICOLON       shift and go to state 223
 
 
-state 213
+state 219
 
     (63) forstmt -> FOR LPAREN scaladecl COMMA condifor COMMA . updatefor RPAREN stmt
     (67) updatefor -> . exp0
@@ -4874,32 +4874,32 @@ state 213
     (77) funcall -> . ID LPAREN explist RPAREN
     (117) exp10 -> . LPAREN exp0 RPAREN
     (78) arraylit -> . LBRACE explist RBRACE
-    NOT             shift and go to state 30
-    MINUS           shift and go to state 28
-    ID              shift and go to state 21
-    STRINGLIT       shift and go to state 37
-    BOOLEANLIT      shift and go to state 38
-    FLOATLIT        shift and go to state 39
-    INTLIT          shift and go to state 40
-    LPAREN          shift and go to state 41
-    LBRACE          shift and go to state 42
+    NOT             shift and go to state 31
+    MINUS           shift and go to state 29
+    ID              shift and go to state 22
+    STRINGLIT       shift and go to state 38
+    BOOLEANLIT      shift and go to state 39
+    FLOATLIT        shift and go to state 40
+    INTLIT          shift and go to state 41
+    LPAREN          shift and go to state 42
+    LBRACE          shift and go to state 43
 
-    updatefor                      shift and go to state 218
-    exp0                           shift and go to state 219
-    exp1                           shift and go to state 23
-    exp2                           shift and go to state 24
-    exp3                           shift and go to state 25
-    exp4                           shift and go to state 26
-    exp5                           shift and go to state 27
-    exp6                           shift and go to state 29
-    exp7                           shift and go to state 31
-    exp8                           shift and go to state 32
-    exp9                           shift and go to state 33
-    funcall                        shift and go to state 34
-    exp10                          shift and go to state 35
-    arraylit                       shift and go to state 36
+    updatefor                      shift and go to state 224
+    exp0                           shift and go to state 225
+    exp1                           shift and go to state 24
+    exp2                           shift and go to state 25
+    exp3                           shift and go to state 26
+    exp4                           shift and go to state 27
+    exp5                           shift and go to state 28
+    exp6                           shift and go to state 30
+    exp7                           shift and go to state 32
+    exp8                           shift and go to state 33
+    exp9                           shift and go to state 34
+    funcall                        shift and go to state 35
+    exp10                          shift and go to state 36
+    arraylit                       shift and go to state 37
 
-state 214
+state 220
 
     (59) assigstmt -> ID LBRACKET expprime RBRACKET ASSIGNMENT exp0 SEMICOLON .
     ID              reduce using rule 59 (assigstmt -> ID LBRACKET expprime RBRACKET ASSIGNMENT exp0 SEMICOLON .)
@@ -4915,7 +4915,7 @@ state 214
     ELSE            reduce using rule 59 (assigstmt -> ID LBRACKET expprime RBRACKET ASSIGNMENT exp0 SEMICOLON .)
 
 
-state 215
+state 221
 
     (60) matchif -> IF LPAREN exp0 RPAREN matchstmt ELSE matchstmt .
     ID              reduce using rule 60 (matchif -> IF LPAREN exp0 RPAREN matchstmt ELSE matchstmt .)
@@ -4931,7 +4931,7 @@ state 215
     ELSE            reduce using rule 60 (matchif -> IF LPAREN exp0 RPAREN matchstmt ELSE matchstmt .)
 
 
-state 216
+state 222
 
     (62) unmatchif -> IF LPAREN exp0 RPAREN matchstmt ELSE unmatchif .
     ID              reduce using rule 62 (unmatchif -> IF LPAREN exp0 RPAREN matchstmt ELSE unmatchif .)
@@ -4947,7 +4947,7 @@ state 216
     ELSE            reduce using rule 62 (unmatchif -> IF LPAREN exp0 RPAREN matchstmt ELSE unmatchif .)
 
 
-state 217
+state 223
 
     (70) dowhilestmt -> DO blockstmt WHILE LPAREN exp0 RPAREN SEMICOLON .
     ID              reduce using rule 70 (dowhilestmt -> DO blockstmt WHILE LPAREN exp0 RPAREN SEMICOLON .)
@@ -4963,19 +4963,19 @@ state 217
     ELSE            reduce using rule 70 (dowhilestmt -> DO blockstmt WHILE LPAREN exp0 RPAREN SEMICOLON .)
 
 
-state 218
+state 224
 
     (63) forstmt -> FOR LPAREN scaladecl COMMA condifor COMMA updatefor . RPAREN stmt
-    RPAREN          shift and go to state 220
+    RPAREN          shift and go to state 226
 
 
-state 219
+state 225
 
     (67) updatefor -> exp0 .
     RPAREN          reduce using rule 67 (updatefor -> exp0 .)
 
 
-state 220
+state 226
 
     (63) forstmt -> FOR LPAREN scaladecl COMMA condifor COMMA updatefor RPAREN . stmt
     (46) stmt -> . matchstmt
@@ -5004,31 +5004,31 @@ state 220
     (60) matchif -> . IF LPAREN exp0 RPAREN matchstmt ELSE matchstmt
     (58) assigstmt -> . ID ASSIGNMENT exp0 SEMICOLON
     (59) assigstmt -> . ID LBRACKET expprime RBRACKET ASSIGNMENT exp0 SEMICOLON
-    IF              shift and go to state 140
-    LBRACE          shift and go to state 106
-    ID              shift and go to state 185
-    RETURN          shift and go to state 141
-    CONTINUE        shift and go to state 142
-    BREAK           shift and go to state 143
-    DO              shift and go to state 144
-    WHILE           shift and go to state 145
-    FOR             shift and go to state 146
+    IF              shift and go to state 145
+    LBRACE          shift and go to state 110
+    ID              shift and go to state 191
+    RETURN          shift and go to state 146
+    CONTINUE        shift and go to state 147
+    BREAK           shift and go to state 148
+    DO              shift and go to state 149
+    WHILE           shift and go to state 150
+    FOR             shift and go to state 151
 
-    stmt                           shift and go to state 221
-    matchstmt                      shift and go to state 127
-    unmatchif                      shift and go to state 128
-    blockstmt                      shift and go to state 130
-    callstmt                       shift and go to state 131
-    retstmt                        shift and go to state 132
-    contistmt                      shift and go to state 133
-    breakstmt                      shift and go to state 134
-    dowhilestmt                    shift and go to state 135
-    whilestmt                      shift and go to state 136
-    forstmt                        shift and go to state 137
-    matchif                        shift and go to state 138
-    assigstmt                      shift and go to state 139
+    stmt                           shift and go to state 227
+    matchstmt                      shift and go to state 132
+    unmatchif                      shift and go to state 133
+    blockstmt                      shift and go to state 135
+    callstmt                       shift and go to state 136
+    retstmt                        shift and go to state 137
+    contistmt                      shift and go to state 138
+    breakstmt                      shift and go to state 139
+    dowhilestmt                    shift and go to state 140
+    whilestmt                      shift and go to state 141
+    forstmt                        shift and go to state 142
+    matchif                        shift and go to state 143
+    assigstmt                      shift and go to state 144
 
-state 221
+state 227
 
     (63) forstmt -> FOR LPAREN scaladecl COMMA condifor COMMA updatefor RPAREN stmt .
     ID              reduce using rule 63 (forstmt -> FOR LPAREN scaladecl COMMA condifor COMMA updatefor RPAREN stmt .)
@@ -5046,32 +5046,19 @@ state 221
 
 Conflicts:
 
-shift/reduce conflict for ID in state 9 resolved as shift
-shift/reduce conflict for LBRACE in state 9 resolved as shift
-shift/reduce conflict for NOT in state 76 resolved as shift
-shift/reduce conflict for MINUS in state 76 resolved as shift
-shift/reduce conflict for ID in state 76 resolved as shift
-shift/reduce conflict for STRINGLIT in state 76 resolved as shift
-shift/reduce conflict for BOOLEANLIT in state 76 resolved as shift
-shift/reduce conflict for FLOATLIT in state 76 resolved as shift
-shift/reduce conflict for INTLIT in state 76 resolved as shift
-shift/reduce conflict for LPAREN in state 76 resolved as shift
-shift/reduce conflict for LBRACE in state 76 resolved as shift
-shift/reduce conflict for DOUBLECOLON in state 84 resolved as shift
-shift/reduce conflict for MUL in state 94 resolved as shift
-shift/reduce conflict for DIV in state 94 resolved as shift
-shift/reduce conflict for MOD in state 94 resolved as shift
-shift/reduce conflict for MUL in state 95 resolved as shift
-shift/reduce conflict for DIV in state 95 resolved as shift
-shift/reduce conflict for MOD in state 95 resolved as shift
-shift/reduce conflict for ELSE in state 205 resolved as shift
-reduce/reduce conflict in state 49 resolved using rule vardecl -> ID COLON typeof SEMICOLON
-rejected rule (subvardecl -> COLON typeof SEMICOLON) in state 49
-reduce/reduce conflict in state 94 resolved using rule exp4 -> exp3 PLUS exp4
-rejected rule (exp3 -> exp4) in state 94
-reduce/reduce conflict in state 95 resolved using rule exp4 -> exp3 MINUS exp4
-rejected rule (exp3 -> exp4) in state 95
-reduce/reduce conflict in state 125 resolved using rule stmtprime -> stmt
-rejected rule (empty -> <empty>) in state 125
-reduce/reduce conflict in state 126 resolved using rule stmtprime -> vardecl
-rejected rule (empty -> <empty>) in state 126
+shift/reduce conflict for DOUBLECOLON in state 87 resolved as shift
+shift/reduce conflict for MUL in state 97 resolved as shift
+shift/reduce conflict for DIV in state 97 resolved as shift
+shift/reduce conflict for MOD in state 97 resolved as shift
+shift/reduce conflict for MUL in state 98 resolved as shift
+shift/reduce conflict for DIV in state 98 resolved as shift
+shift/reduce conflict for MOD in state 98 resolved as shift
+shift/reduce conflict for ELSE in state 211 resolved as shift
+reduce/reduce conflict in state 97 resolved using rule exp4 -> exp3 PLUS exp4
+rejected rule (exp3 -> exp4) in state 97
+reduce/reduce conflict in state 98 resolved using rule exp4 -> exp3 MINUS exp4
+rejected rule (exp3 -> exp4) in state 98
+reduce/reduce conflict in state 130 resolved using rule stmtprime -> stmt
+rejected rule (empty -> <empty>) in state 130
+reduce/reduce conflict in state 131 resolved using rule stmtprime -> vardecl
+rejected rule (empty -> <empty>) in state 131
