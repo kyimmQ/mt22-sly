@@ -477,8 +477,8 @@ class MT22Parser(Parser):
     
     @_('exp1 DOUBLECOLON exp1')
     def exp1(self, ctx):
-        left = ctx.exp11
-        right = ctx.exp12
+        left = ctx.exp10
+        right = ctx.exp11
         return BinExpr(ctx.DOUBLECOLON, left, right)
     
     @_('exp1')
@@ -487,26 +487,26 @@ class MT22Parser(Parser):
     
     @_('exp2 GEQ exp2')
     def exp1(self, ctx):
-        left = ctx.exp21
-        right = ctx.exp22
+        left = ctx.exp20
+        right = ctx.exp21
         return BinExpr(ctx.GEQ, left, right)
     
     @_('exp2 GREATERTHAN exp2')
     def exp1(self, ctx):
-        left = ctx.exp21
-        right = ctx.exp22
+        left = ctx.exp20
+        right = ctx.exp21
         return BinExpr(ctx.GREATERTHAN, left, right)
     
     @_('exp2 LEQ exp2')
     def exp1(self, ctx):
-        left = ctx.exp21
-        right = ctx.exp22
+        left = ctx.exp20
+        right = ctx.exp21
         return BinExpr(ctx.LEQ, left, right)
     
     @_('exp2 LESSTHAN exp2')
     def exp1(self, ctx):
-        left = ctx.exp21
-        right = ctx.exp22
+        left = ctx.exp20
+        right = ctx.exp21
         return BinExpr(ctx.LESSTHAN, left, right)
     
     @_('exp2 NOTEQUAL exp2')
@@ -517,8 +517,8 @@ class MT22Parser(Parser):
     
     @_('exp2 EQUAL exp2')
     def exp1(self, ctx):
-        left = ctx.exp21
-        right = ctx.exp22
+        left = ctx.exp20
+        right = ctx.exp21
         return BinExpr(ctx.EQUAL, left, right)
     
     @_('exp2')
@@ -639,16 +639,13 @@ class MT22Parser(Parser):
     
 
 if __name__ == '__main__':
-    data = """voidA: function integer(n: integer){
-                return n%10;
-            }
-            voidB: function void (out n: integer, delta: integer){
-                n = n + voidA(delta);
-            }
-            main: function void () {
-                delta: integer = 5;
-                voidB(x,delta);
-                printInt(x);
+    data = """main: function void () {
+                for (i = 1, i < 10, i + 1) {
+                    if (4*2 > i){
+                        writeInt(i);
+                        continue;
+                    }
+                }
             }
         """
     lexer = MT22Lexer()
