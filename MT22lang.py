@@ -256,8 +256,8 @@ class MT22Parser(Parser):
     
     @_('ID COLON FUNCTION returntype paramdecl INHERIT ID blockstmt')
     def funcdecl(self, ctx): 
-        name = ctx.ID1
-        inher = ctx.ID2
+        name = ctx.ID0
+        inher = ctx.ID1
 
         return FuncDecl(name, ctx.returntype, ctx.paramdecl, inher, ctx.blockstmt)
     
@@ -389,7 +389,7 @@ class MT22Parser(Parser):
     
     @_('IF LPAREN exp0 RPAREN matchstmt ELSE matchstmt')
     def matchif(self, ctx):
-        return IfStmt(ctx.exp0, ctx.matchstmt1, ctx.matchstmt2)
+        return IfStmt(ctx.exp0, ctx.matchstmt0, ctx.matchstmt1)
     
     @_('IF LPAREN exp0 RPAREN matchstmt ELSE unmatchif')
     def unmatchif(self, ctx):
@@ -644,13 +644,18 @@ class MT22Parser(Parser):
 
 if __name__ == '__main__':
     data = """
-            r, s: integer;
+            x: integer = 65;
+            fact: function integer(n: integer){
+                if (n == 0) return 1;
+                else return n * fact(n-1);
+            }
+            inc: function void (out n: integer, inherit delta: integer) inherit fact{
+                n = n + delta;
+            }
             main: function void () {
-                a, b: array [5] of integer;
-                r = 2.0;
-                s = r * r * myPI;
-                a[0] = s;
-                printInt(a[0]);
+                delta: integer = fact(fact(3));
+                inc(x,delta);
+                printInt(x);
             }
         """
     lexer = MT22Lexer()
