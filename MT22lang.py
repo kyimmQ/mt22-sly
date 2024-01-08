@@ -1,3 +1,4 @@
+import os
 from sly import Lexer, Parser
 
 from AST import *
@@ -8,18 +9,23 @@ class MT22Lexer(Lexer):
         LPAREN, RPAREN, LBRACKET, RBRACKET, LBRACE, RBRACE, COMMA, SEMICOLON, COLON, ASSIGNMENT,
         PLUS, MINUS, MUL, DIV, MOD, NOT, AND, OR, EQUAL, NOTEQUAL, LESSTHAN, LEQ, GREATERTHAN, GEQ, DOUBLECOLON,
         AUTO, BREAK, BOOLEAN, DO, ELSE, FLOAT, FOR, FUNCTION, IF, INTEGER, RETURN, STRING, VOID, WHILE, OUT, CONTINUE, OF, INHERIT, ARRAY,
-        INTLIT, FLOATLIT, BOOLEANLIT, STRINGLIT,ID
+        INTLIT, FLOATLIT, BOOLEANLIT, STRINGLIT,ID,
+        CPP_COMMENT
     }
     
+    # literals
     literals = {'.'}
+    
     # ignore char
     ignore = ' \t\b\f\r\n'
-    # ignored_seq = r'[ \t\b\f\r\n]+'
     
+    @_(r'(/\*)(.|\n)*?(\*/)')
+    def CPP_COMMENT(self, t):
+        return None
     # Regular expression rules for tokens
     BOOLEANLIT = r'true | false'
     
-    @_(r'\"(.+?)\"')
+    @_(r'\"(\\"|[^\n\t])*\"')
     def STRINGLIT(self, t):
         t.value = t.value[1:-1]
         return t    
@@ -51,7 +57,7 @@ class MT22Lexer(Lexer):
     COLON = r':'
     ASSIGNMENT = r'='
     
-    @_(r'(([1-9][0-9]*(_[0-9]+)*)|[0])\.[0-9]*([Ee][+-]?[1-9][0-9]*)?')
+    @_(r'((([1-9][0-9]*(_[0-9]+)*)|[0])(\.[0-9]*)([Ee][+-]?[1-9][0-9]*)?)|(((([1-9][0-9]*(_[0-9]+)*)|[0])|(\.[0-9]*))[Ee][+-]?[1-9][0-9]*)')
     def FLOATLIT(self, t):
         t.value = t.value.replace('_','')
         return t
@@ -146,7 +152,6 @@ class MT22Parser(Parser):
     
     @_('ID subvardecl exp0 SEMICOLON')
     def vardecl(self, ctx):
-        
         ids, exps, typeof = ctx.subvardecl
         ids = [ctx.ID] + ids
         exps = exps + [ctx.exp0]
@@ -174,7 +179,6 @@ class MT22Parser(Parser):
     
     @_('COLON typeof SEMICOLON')
     def subvardecl3(self, ctx):
-        
         return [], [], ctx.typeof
     
     # idlist: ID COMMA idlist | ID;
@@ -253,12 +257,10 @@ class MT22Parser(Parser):
         name = ctx.ID
         inher = None
         return FuncDecl(name, ctx.returntype, ctx.paramdecl, inher, ctx.blockstmt)
-    
     @_('ID COLON FUNCTION returntype paramdecl INHERIT ID blockstmt')
     def funcdecl(self, ctx): 
         name = ctx.ID0
         inher = ctx.ID1
-
         return FuncDecl(name, ctx.returntype, ctx.paramdecl, inher, ctx.blockstmt)
     
     # paramdecl: LPAREN paramlist RPAREN;
@@ -643,22 +645,60 @@ class MT22Parser(Parser):
     
 
 if __name__ == '__main__':
-    data = """
-            main : function void() {
-                x,y : integer = 3, 5+7;
-                do {
-                    if (x > 1) writeInt(x);
-                    x = x - 1;
-                    continue;
-                    if (x > 5) writeInt(x);
-                }
-                while (x > 0);
-            }
-        """
+    test = r"""/* test 
+program */
+_x, _y: integer = 1, 2_231_231;
+a,b,c : float = 1_234.567, .123e-3, 1.2e+3;
+d,e : boolean = true, false;
+f : string = "This is a string containing tab \t";
+g : string = "He asked me: \"Where is John?\"";
+h : array [3] of string = {"Kangxi", "Yongzheng", "Qianlong"};
+foo: function void(inherit out n: integer) inherit bar {
+    return bar();
+}
+foo2: function auto (inherit out n: integer) inherit bar {
+    return bar();
+}
+foo3: function string (inherit out n: integer, b: float, c: boolean) inherit bar {
+    return bar();
+}
+foo4: function boolean (inherit out n: integer) inherit bar {
+    return bar();
+}
+foo5: function array [5,5] of integer (inherit out n: integer) inherit bar {
+    return bar();
+}
+x: integer = 65; 
+fact: function integer (n: integer) { 
+    if (n == 0) return 1; 
+    else return n*fact(n - 1);
+}
+inc: function void (out n: integer, delta: integer) { n = n + 1; }
+main: function void () { 
+    delta: integer = fact (3);
+    inc(x, delta); 
+    printInteger(x);
+    x = 0;
+    if(x > 0) x = fact(0);
+    for(i = 1, i < 10, i+1) printInterger(i);
+    for(i = 1, i < 10, i+1) {printInterger(i); printInterger(i);}
+    while(x < 10) printInteger(x);
+    while(x < 10) {printInteger(x); printInteger(x);}
+    do{
+        if (x == 5) continue;
+        if (x > 10) break;
+        a[x] = a[x] + b;
+        x = x + 1;
+    }while (x<10);
+}""";
+    data = """/* test\nprogram */"""
     lexer = MT22Lexer()
     parser = MT22Parser()
-    tks = lexer.tokenize(data)
+    tks = lexer.tokenize(test)
     # for t in tks:
     #     print(t)
     result = parser.parse(tks)
-    print(result)
+    dest = open(os.path.join("./","out.txt"), "w")
+    dest.write(str(result))
+    dest.close()
+    

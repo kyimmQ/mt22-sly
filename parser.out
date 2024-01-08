@@ -120,6 +120,10 @@ Rule 116   exp9 -> INTLIT
 Rule 117   exp10 -> LPAREN exp0 RPAREN
 Rule 118   empty -> <empty>
 
+Unused terminals:
+
+    CPP_COMMENT
+
 Terminals, with rules where they appear:
 
 AND                  : 93
@@ -132,6 +136,7 @@ BREAK                : 71
 COLON                : 8 9 12 29 30 36 37 38 39
 COMMA                : 10 10 11 14 24 35 63 63 82
 CONTINUE             : 72
+CPP_COMMENT          : 
 DIV                  : 97
 DO                   : 70
 DOUBLECOLON          : 90
